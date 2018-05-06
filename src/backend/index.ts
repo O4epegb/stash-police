@@ -10,10 +10,10 @@ function onAppReady() {
         height: 720,
         center: true,
         frame: true,
-        title: 'Electron Notification Example',
-        webPreferences: {
-            webSecurity: false
-        }
+        title: 'Stash Police'
+        // webPreferences: {
+        //     webSecurity: false
+        // }
     });
 
     mainWindow.loadURL(`file://${__dirname}/index.html`);

@@ -7,15 +7,21 @@ import { App } from './App';
 
 import './styles/index.css';
 
+(window as any).ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+
 const container = document.createElement('div');
 container.id = 'react-root';
 document.body.appendChild(container);
 
-ReactDom.render(
-    <Provider>
-        <HashRouter>
-            <Route component={App} />
-        </HashRouter>
-    </Provider>,
-    container
-);
+function render(component) {
+    ReactDom.render(
+        <Provider>
+            <HashRouter>
+                <Route component={component} />
+            </HashRouter>
+        </Provider>,
+        container
+    );
+}
+
+render(App);

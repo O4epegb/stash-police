@@ -45,6 +45,15 @@ class StoreClass {
     };
 
     @action
+    deleteReport = (reportToDelete: Report) => {
+        this.reports = this.reports.filter(
+            report => report.id !== reportToDelete.id
+        );
+
+        updateReportsOnDisk(this.accountName, this.reports);
+    };
+
+    @action
     setUserInfo = (userInfo: UserInfo) => {
         this.userInfo = userInfo;
 

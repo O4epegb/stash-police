@@ -39,11 +39,9 @@ export class ReportsPage extends React.Component {
                                             _.last(report.checkouts).items
                                         )}
                                         <br />
-                                        {report.id}
+                                        Checkouts: {report.checkouts.length}
                                         <br />
-                                        checkouts: {report.checkouts.length}
-                                        <br />
-                                        tabs: {report.lastProccessedTabs.length}
+                                        Tabs: {report.lastProccessedTabs.length}
                                     </div>
                                     <br />
                                 </React.Fragment>

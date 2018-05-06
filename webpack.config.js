@@ -78,7 +78,10 @@ const frontendConfig = {
                         loader: 'postcss-loader',
                         ident: 'postcss',
                         options: {
-                            plugins: loader => [require('precss'), require('postcss-hexrgba')],
+                            plugins: loader => [
+                                require('precss'),
+                                require('postcss-hexrgba')
+                            ],
                             sourceMap: true
                         }
                     }
@@ -104,7 +107,10 @@ const backendConfig = {
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx']
     },
-    plugins: [new ForkTsCheckerWebpackPlugin(), useElectronConnect && ElectronReloadWebpackPlugin()].filter(Boolean),
+    plugins: [
+        new ForkTsCheckerWebpackPlugin(),
+        useElectronConnect && ElectronReloadWebpackPlugin()
+    ].filter(Boolean),
     module: {
         rules: [
             {

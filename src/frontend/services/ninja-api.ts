@@ -22,8 +22,10 @@ export function getCurrencyOverview(params: NinjaApiParams) {
     return requestNinjaApi<m.CurrencyOverview>(
         ApiUrls.ninjaGetCurrencyOverview,
         params
-    ).then(response => {
-        return response.data.lines.reduce(
+    ).then(({ data }) => {
+        const currencyOverview = data ? data.lines : [];
+
+        return currencyOverview.reduce(
             (acc, item) => {
                 acc[item.currencyTypeName] = item;
                 return acc;

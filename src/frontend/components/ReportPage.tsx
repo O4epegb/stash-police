@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import * as m from '../models';
 import { getLeagues, createCheckout } from '../services';
 import { formatDate, DateFormats, getTotalItemsValue } from '../utils';
+import { Routes } from '../config';
 import { Store } from '../Store';
 
 type ReportPageProps = RouteComponentProps<{ id: string }> & {};
@@ -71,6 +72,13 @@ export class ReportPage extends React.Component<
         });
     };
 
+    deleteReport = () => {
+        const { activeReport } = Store;
+
+        Store.deleteReport(activeReport);
+        this.props.history.push(Routes.Reports);
+    };
+
     render() {
         const { selectedCheckoutId, isActiveLeague } = this.state;
         const { match } = this.props;
@@ -100,6 +108,10 @@ export class ReportPage extends React.Component<
                                 Update report
                             </button>
                         )}
+                        <br />
+                        <button onClick={this.deleteReport}>
+                            Delete report
+                        </button>
                         <hr />
                         {report.checkouts.length > 0 && (
                             <div>
