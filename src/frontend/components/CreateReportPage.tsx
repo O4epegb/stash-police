@@ -5,7 +5,7 @@ import * as m from '../models';
 import { createNewReport, getTabsByLeague, getLeagues } from '../services';
 import { isRemoveOnlyTab, pluralize, generateAffixedName } from '../utils';
 import { Store } from '../Store';
-import { getStashItemsDelay } from '../config';
+import { getStashItemsDelay } from '../constants';
 
 interface Props {
     onReportCreate: (report: m.Report) => any;
@@ -42,7 +42,7 @@ export class CreateReportPage extends React.Component<Props, State> {
 
         getLeagues().then(leagues => {
             this.setState({
-                leagues,
+                leagues: leagues.filter(league => !league.isSsf),
                 isFetchingLeagues: false
             });
         });
@@ -164,7 +164,7 @@ export class CreateReportPage extends React.Component<Props, State> {
                 {leagues &&
                     !selectedLeague && (
                         <div>
-                            Select league
+                            Select league:
                             {leagues.map(league => (
                                 <div
                                     key={league.id}
@@ -173,6 +173,7 @@ export class CreateReportPage extends React.Component<Props, State> {
                                     {league.id}
                                 </div>
                             ))}
+                            <small>ssf leagues are excluded for now</small>
                         </div>
                     )}
                 {selectedLeague && (

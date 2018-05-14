@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import * as m from '../models';
 import { delay, isColorBright, uuid, isRemoveOnlyTab } from '../utils';
-import { getStashItemsDelay, Colors, ApiUrls, ItemNames } from '../config';
+import { getStashItemsDelay, Colors, ApiUrls, ItemNames } from '../constants';
 import * as ninjaApi from './ninja-api';
 
 export function getLeagues() {
@@ -12,7 +12,8 @@ export function getLeagues() {
         return response.data.map(league => {
             return {
                 ...league,
-                isHardcore: league.id.toLowerCase().includes('hardcore')
+                isHardcore: league.id.toLowerCase().includes('hardcore'),
+                isSsf: league.id.toLowerCase().includes('ssf')
             };
         });
     });

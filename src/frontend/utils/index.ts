@@ -4,7 +4,12 @@ import * as _ from 'lodash';
 import { remote } from 'electron';
 import { format } from 'date-fns';
 
-import { settingsPath, reportsPath, ApiUrls, poeCookieName } from '../config';
+import {
+    settingsPath,
+    reportsPath,
+    ApiUrls,
+    poeCookieName
+} from '../constants';
 import { Reports, Settings, ReportsFile, Tab, CheckoutItems } from '../models';
 import { prefixes, suffixes } from '../data';
 
@@ -35,6 +40,25 @@ export function setSessionIdCookie(sessionId: string) {
 
             return resolve();
         });
+    });
+}
+
+export function removeSessionIdCookie() {
+    return new Promise((resolve, reject) => {
+        remote.session.defaultSession.cookies.remove(
+            ApiUrls.index,
+            poeCookieName,
+            error => {
+                if (error) {
+                    console.error(error);
+                    return reject();
+                }
+
+                updateSettings({ sessionId: '' });
+
+                return resolve();
+            }
+        );
     });
 }
 

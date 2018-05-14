@@ -5,15 +5,21 @@ import { observer } from 'mobx-react';
 
 import * as s from './services';
 import * as m from './models';
-import { isProduction, Routes } from './config';
-import { getSettings, updateSettings, setSessionIdCookie } from './utils';
+import { isProduction, Routes } from './constants';
+import {
+    getSettings,
+    updateSettings,
+    setSessionIdCookie,
+    removeSessionIdCookie
+} from './utils';
 import { Store } from './Store';
 
-import { MainPage } from './components/MainPage';
+import { StartupPage } from './components/StartupPage';
 import { LoginPage } from './components/LoginPage';
-import { ReportsPage } from './components/ReportsPage';
 import { ReportPage } from './components/ReportPage';
+import { MainPage } from './components/MainPage';
 import { CreateReportPage } from './components/CreateReportPage';
+import { Reports } from './components/Reports';
 import { Layout } from './components/Layout';
 import { UserInfo } from './models';
 
@@ -56,35 +62,40 @@ export class App extends React.Component<Props, State> {
         this.startupTime = Date.now();
 
         if (!settings.sessionId || !settings.userInfo.accountName) {
-            this.goAfterLoadingRoute(Routes.Login);
+            this.goToRoute(Routes.Login);
         } else {
             setSessionIdCookie(settings.sessionId)
                 .then(s.getAccountInfo)
                 .then(userInfo => {
-                    updateSettings({
-                        userInfo
-                    });
-                    Store.setUserInfo(userInfo);
-                    this.goAfterLoadingRoute(Routes.Reports);
+                    this.onLoginSuccess(userInfo, true);
                 })
                 .catch(error => {
-                    this.goAfterLoadingRoute(Routes.Login);
+                    this.goToRoute(Routes.Login);
                 });
         }
     };
 
-    goAfterLoadingRoute = (route: Routes) => {
-        const delay = isProduction ? 3000 - (Date.now() - this.startupTime) : 0;
+    goToRoute = (route: Routes, withDelay = true) => {
+        const delay =
+            isProduction && withDelay
+                ? 3000 - (Date.now() - this.startupTime)
+                : 0;
 
         setTimeout(() => {
             this.props.history.push(route);
         }, delay);
     };
 
-    onLoginSuccess = (userInfo: UserInfo) => {
+    onLoginSuccess = (userInfo: UserInfo, withDelay = false) => {
         Store.setUserInfo(userInfo);
         updateSettings({ userInfo });
-        this.props.history.push(Routes.Reports);
+        this.goToRoute(Routes.Main, withDelay);
+    };
+
+    onLogout = () => {
+        removeSessionIdCookie().then(() => {
+            this.goToRoute(Routes.Login, false);
+        });
     };
 
     onReportCreated = (report: m.Report) => {
@@ -96,7 +107,11 @@ export class App extends React.Component<Props, State> {
             <div className="content-container">
                 <div className="content">
                     <Switch>
-                        <Route exact path={Routes.Main} component={MainPage} />
+                        <Route
+                            exact
+                            path={Routes.Startup}
+                            component={StartupPage}
+                        />
                         <Route
                             exact
                             path={Routes.Login}
@@ -106,27 +121,35 @@ export class App extends React.Component<Props, State> {
                                 />
                             )}
                         />
-                        <Layout>
-                            <Route
-                                exact
-                                path={Routes.Reports}
-                                component={ReportsPage}
-                            />
-                            <Route
-                                exact
-                                path={Routes.Report}
-                                component={ReportPage}
-                            />
-                            <Route
-                                exact
-                                path={Routes.ReportsCreate}
-                                render={props => (
-                                    <CreateReportPage
-                                        onReportCreate={this.onReportCreated}
+                        <Layout
+                            onLogout={this.onLogout}
+                            leftColumn={() => <Route component={Reports} />}
+                            rightColumn={() => (
+                                <React.Fragment>
+                                    <Route
+                                        exact
+                                        path={Routes.Main}
+                                        component={MainPage}
                                     />
-                                )}
-                            />
-                        </Layout>
+                                    <Route
+                                        exact
+                                        path={Routes.Report}
+                                        component={ReportPage}
+                                    />
+                                    <Route
+                                        exact
+                                        path={Routes.ReportsCreate}
+                                        render={props => (
+                                            <CreateReportPage
+                                                onReportCreate={
+                                                    this.onReportCreated
+                                                }
+                                            />
+                                        )}
+                                    />
+                                </React.Fragment>
+                            )}
+                        />
                     </Switch>
                 </div>
             </div>

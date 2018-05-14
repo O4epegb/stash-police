@@ -8,28 +8,36 @@ $mainBorder: #302E2E;
 $buttonBorder: #1a1a1a;
 $buttonBg: #333333;
 $buttonText: #ffffff;
+$red: #c53b12;
+$blue: #02a6f2;
 
 
 * {
     box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+
+    &-track {
+        background: #f1f1f1; 
+    }
+
+    &-thumb {
+        background: #888; 
+
+        &:hover {
+            background: #555; 
+        }
+    }
+}
+
 html,
-body {
+body,
+#react-root {
     height: 100%;
     padding: 0;
     margin: 0;
-}
-
-body {
-    color: $textColor;
-    user-select: none;
-    cursor: default;
-    font-family: 'Roboto', sans-serif;
-
-    background-image: url('../assets/main-bg.jpg');
-    background-size: cover;
-    background-color: $mainBg;
 }
 
 a {
@@ -39,10 +47,11 @@ a {
 
 button {
     padding: 4px 8px;
-    border: 1px solid $buttonBorder;
-    border-top-color: #989999;
+    border: 2px solid $buttonBorder;
+    border: 2px solid #989999;
+    border-radius: 4px;
     color: $buttonText;
-    background-color: $buttonBg;
+    background-color: transparent;
     cursor: pointer;
 
     &[disabled] {
@@ -59,14 +68,38 @@ button {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    background-color: $mainBg;
-    box-shadow: 0 2px 4px 2px rgba($mainBg, 0.88);
+    max-width: 1280px;
+    width: 100%;
+    height: 100%;
+    /* background-color: $mainBg; */
+    /* box-shadow: 0 2px 4px 2px rgba($mainBg, 0.88); */
+    z-index: 1;
 
     &-container {
-        max-width: 960px;
+        position: relative;
         margin: auto;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        height: 100%;
+        color: $textColor;
+        user-select: none;
+        cursor: default;
+        font-family: 'Roboto', sans-serif;
+        background-image: url('../assets/main-bg.jpg');
+        background-size: cover;
+        background-color: $mainBg;
+        overflow: hidden;
+
+        /* &:after {
+            position: absolute;
+            content: '';
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba($mainBg, 0.80);
+        } */
     }
 }
 
@@ -87,8 +120,23 @@ button {
 }
 
 .layout {
+    display: grid;
+    grid-template-rows: 68px calc(100% - 68px);
+    height: 100%;
+    max-height: 100%;
+
     &__content {
+        display: grid;
+        grid-template-columns: 360px auto;
+        grid-template-rows: 100%;
+        grid-column-gap: 20px;
+        padding: 10px 0;
+    }
+
+    &__column {
         padding: 10px;
+        overflow: auto;
+        background-color: rgba($mainBg, 0.8);
     }
 }
 
@@ -96,7 +144,8 @@ button {
     display: flex;
     height: 68px;
     justify-content: space-between;
-    border-bottom: 2px solid $mainBorder;
+    /* border-bottom: 2px solid $mainBorder; */
+    background-color: $mainBg;
 
     &__account {
         display: flex;
@@ -123,6 +172,7 @@ button {
             justify-content: center;
             padding: 0px 10px;
             transition: box-shadow 0.2s;
+            cursor: pointer;
 
             &_active,
             &:hover {
@@ -136,4 +186,12 @@ h1 {
     font-size: 40px;
     font-weight: 400;
     margin: 0;
+}
+
+.reports {
+    &__item {
+        & + & {
+            margin-top: 10px;
+        }
+    }
 }

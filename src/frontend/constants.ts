@@ -7,9 +7,9 @@ export const isDevelopment = !isProduction;
 export const poeCookieName = 'POESESSID';
 
 export enum Routes {
-    Main = '/',
+    Startup = '/',
+    Main = '/main',
     Login = '/login',
-    Reports = '/reports',
     Report = '/reports/:id',
     ReportsCreate = '/create-report'
 }
@@ -46,22 +46,22 @@ export enum ApiUrls {
     login = 'https://pathofexile.com/login',
     myAccount = 'https://pathofexile.com/my-account',
     getStashItems = 'https://pathofexile.com/character-window/get-stash-items',
-    ninjaGetCurrencyOverview = 'http://api.poe.ninja/api/Data/GetCurrencyOverview'
+    ninjaGetCurrencyOverview = 'http://poe.ninja/api/Data/GetCurrencyOverview'
 
     // POE_LOGIN_STEAM = 'https://pathofexile.com/login/steam',
     // POE_MAIN_PAGE = 'https://pathofexile.com/',
     // POE_GET_CHARACTERS = 'https://pathofexile.com/character-window/get-characters',
 
-    // NINJA_FRAGMENT_OVERVIEW = 'http://api.poe.ninja/api/Data/GetFragmentOverview',
-    // NINJA_ESSENCE_OVERVIEW = 'http://api.poe.ninja/api/Data/GetEssenceOverview',
+    // NINJA_FRAGMENT_OVERVIEW = 'http://poe.ninja/api/Data/GetFragmentOverview',
+    // NINJA_ESSENCE_OVERVIEW = 'http://poe.ninja/api/Data/GetEssenceOverview',
 
-    // NINJA_UNIQUE_MAP_OVERVIEW = 'http://api.poe.ninja/api/Data/GetUniqueMapOverview',
-    // NINJA_DIV_CARDS_OVERVIEW = 'http://api.poe.ninja/api/Data/GetDivinationCardsOverview',
-    // NINJA_MAP_OVERVIEW = 'http://api.poe.ninja/api/Data/GetMapOverview',
+    // NINJA_UNIQUE_MAP_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueMapOverview',
+    // NINJA_DIV_CARDS_OVERVIEW = 'http://poe.ninja/api/Data/GetDivinationCardsOverview',
+    // NINJA_MAP_OVERVIEW = 'http://poe.ninja/api/Data/GetMapOverview',
 
-    // NINJA_UNIQUE_JEWEL_OVERVIEW = 'http://api.poe.ninja/api/Data/GetUniqueJewelOverview',
-    // NINJA_UNIQUE_FLASK_OVERVIEW = 'http://api.poe.ninja/api/Data/GetUniqueFlaskOverview',
-    // NINJA_UNIQUE_WEAPON_OVERVIEW = 'http://api.poe.ninja/api/Data/GetUniqueWeaponOverview',
-    // NINJA_UNIQUE_ARMOUR_OVERVIEW = 'http://api.poe.ninja/api/Data/GetUniqueArmourOverview',
-    // NINJA_UNIQUE_ACCESSORY_OVERVIEW = 'http://api.poe.ninja/api/Data/GetUniqueAccessoryOverview'
+    // NINJA_UNIQUE_JEWEL_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueJewelOverview',
+    // NINJA_UNIQUE_FLASK_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueFlaskOverview',
+    // NINJA_UNIQUE_WEAPON_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueWeaponOverview',
+    // NINJA_UNIQUE_ARMOUR_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueArmourOverview',
+    // NINJA_UNIQUE_ACCESSORY_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueAccessoryOverview'
 }

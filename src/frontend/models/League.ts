@@ -4,6 +4,7 @@ export type ApiLeagues = Array<ApiLeague>;
 
 export interface League extends ApiLeague {
     isHardcore: boolean;
+    isSsf: boolean;
 }
 
 export interface ApiLeague {

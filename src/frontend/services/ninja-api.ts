@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import * as m from '../models';
 import { formatDate, DateFormats } from '../utils';
-import { ApiUrls } from '../config';
+import { ApiUrls } from '../constants';
 
 export interface NinjaApiParams {
     league: string;
