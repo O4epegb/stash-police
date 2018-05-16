@@ -14,6 +14,7 @@ $blue: #02a6f2;
 
 * {
     box-sizing: border-box;
+    outline: none;
 }
 
 ::-webkit-scrollbar {
@@ -38,6 +39,13 @@ body,
     height: 100%;
     padding: 0;
     margin: 0;
+}
+
+body {
+    color: $textColor;
+    user-select: none;
+    cursor: default;
+    font-family: 'Roboto', sans-serif;
 }
 
 a {
@@ -82,10 +90,6 @@ button {
         flex-direction: column;
         align-items: center;
         height: 100%;
-        color: $textColor;
-        user-select: none;
-        cursor: default;
-        font-family: 'Roboto', sans-serif;
         background-image: url('../assets/main-bg.jpg');
         background-size: cover;
         background-color: $mainBg;
@@ -144,11 +148,17 @@ button {
     display: flex;
     height: 68px;
     justify-content: space-between;
-    /* border-bottom: 2px solid $mainBorder; */
     background-color: $mainBg;
 
     &__account {
         display: flex;
+
+        &-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+        }
 
         &-avatar {
             max-height: 66px;
@@ -158,8 +168,12 @@ button {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px;
             font-size: 26px;
+        }
+
+        &-logout {
+            font-size: 12px;
+            cursor: pointer;
         }
     }
 
@@ -190,8 +204,45 @@ h1 {
 
 .reports {
     &__item {
+        padding: 10px;
+        border-radius: 4px;
+        background-color: $mainBg;
+        border: 1px solid $mainBorder;
+
         & + & {
             margin-top: 10px;
         }
+    }
+}
+
+.league-list {
+    &__item {
+        display: flex;
+        align-items: center;
+        padding: 4px 8px;
+        border-left: 3px solid white;
+
+        &_hc {
+            border-left-color: #FE0000;
+        }
+
+        &_sc {
+            border-left-color: #00C8FE;
+        }
+
+        & + & {
+            margin-top: 10px;
+        }
+    }
+
+    &__clear-league {
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        font-size: 10px;
+        margin-left: 4px;
+        border: none;
+        border-radius: 0;
+        background-color: #333333;
     }
 }

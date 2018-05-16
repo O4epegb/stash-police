@@ -61,10 +61,17 @@ export class Layout extends React.Component<Props> {
                                 alt={Store.accountName}
                                 className="header__account-avatar"
                             />
-                            <div className="header__account-name">
-                                {Store.accountName}
+                            <div className="header__account-content">
+                                <div className="header__account-name">
+                                    {Store.accountName}
+                                </div>
+                                <div
+                                    className="header__account-logout"
+                                    onClick={onLogout}
+                                >
+                                    Logout
+                                </div>
                             </div>
-                            <div onClick={onLogout}>Logout</div>
                         </div>
                         <div className="header__menu">
                             <Link

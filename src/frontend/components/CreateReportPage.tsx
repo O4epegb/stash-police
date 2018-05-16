@@ -1,11 +1,21 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
+import posed, { PoseGroup } from 'react-pose';
 
 import * as m from '../models';
 import { createNewReport, getTabsByLeague, getLeagues } from '../services';
 import { isRemoveOnlyTab, pluralize, generateAffixedName } from '../utils';
 import { Store } from '../Store';
 import { getStashItemsDelay } from '../constants';
+
+const LeagueItem = posed.div({
+    enter: {
+        opacity: 1
+    },
+    exit: {
+        opacity: 0
+    }
+});
 
 interface Props {
     onReportCreate: (report: m.Report) => any;
@@ -65,7 +75,6 @@ export class CreateReportPage extends React.Component<Props, State> {
     };
 
     createReport = () => {
-        // TODO DYNAMIC REPORT NAME
         this.setState({ isCreatingReport: true });
 
         const reportName = this.state.reportName || this.getNewReportName();
@@ -85,16 +94,14 @@ export class CreateReportPage extends React.Component<Props, State> {
     };
 
     selectTab = (tab: m.Tab & { isSelected: boolean }) => {
-        const newTabs = this.state.tabs.map(t => {
-            if (t.id === tab.id) {
-                t.isSelected = !tab.isSelected;
-            }
-
-            return t;
-        });
-
         this.setState({
-            tabs: newTabs
+            tabs: this.state.tabs.map(t => {
+                if (t.id === tab.id) {
+                    t.isSelected = !tab.isSelected;
+                }
+
+                return t;
+            })
         });
     };
 
@@ -144,6 +151,9 @@ export class CreateReportPage extends React.Component<Props, State> {
         const timeToGetInfo =
             selectedTabs &&
             Math.ceil(getStashItemsDelay * selectedTabs.length / 1000);
+        const leaguesToShow = selectedLeague
+            ? leagues.filter(l => l.id === selectedLeague.id)
+            : leagues;
 
         return (
             <div className="create-report">
@@ -158,30 +168,55 @@ export class CreateReportPage extends React.Component<Props, State> {
                         value={this.state.reportName}
                         onChange={this.onReportNameChange}
                     />
-                    <div onClick={this.generateReportName}>generate</div>
+                    <span onClick={this.generateReportName}>generate</span>
                 </div>
                 {isFetchingLeagues && <div>Loading leagues</div>}
-                {leagues &&
-                    !selectedLeague && (
-                        <div>
-                            Select league:
-                            {leagues.map(league => (
-                                <div
-                                    key={league.id}
-                                    onClick={() => this.selectLeague(league)}
-                                >
-                                    {league.id}
-                                </div>
-                            ))}
-                            <small>ssf leagues are excluded for now</small>
-                        </div>
-                    )}
-                {selectedLeague && (
-                    <div>
-                        League: {selectedLeague.id}{' '}
-                        {!isFetchingTabs && (
-                            <button onClick={this.clearLeague}>X</button>
+                {leagues && (
+                    <div className="league-list">
+                        {selectedLeague ? (
+                            'League:'
+                        ) : (
+                            <div>
+                                Select league (<small>
+                                    SSF leagues are excluded for now
+                                </small>):
+                            </div>
                         )}
+                        <div>
+                            <PoseGroup>
+                                {leaguesToShow.map(league => {
+                                    const isLeagueSelected =
+                                        selectedLeague &&
+                                        league.id === selectedLeague.id;
+
+                                    return (
+                                        <LeagueItem
+                                            key={league.id}
+                                            className={`league-list__item league-list__item_${
+                                                league.isHardcore ? 'hc' : 'sc'
+                                            }`}
+                                            onClick={() =>
+                                                !isLeagueSelected &&
+                                                this.selectLeague(league)
+                                            }
+                                        >
+                                            {league.id}
+                                            {isLeagueSelected &&
+                                                !isFetchingTabs && (
+                                                    <button
+                                                        className="league-list__clear-league"
+                                                        onClick={
+                                                            this.clearLeague
+                                                        }
+                                                    >
+                                                        X
+                                                    </button>
+                                                )}
+                                        </LeagueItem>
+                                    );
+                                })}
+                            </PoseGroup>
+                        </div>
                     </div>
                 )}
                 {isFetchingTabs && <div>Loading Tabs</div>}
