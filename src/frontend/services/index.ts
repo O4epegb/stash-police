@@ -168,6 +168,7 @@ export function createNewReport({
             name: reportName,
             id: uuid(),
             createdAt: checkout.createdAt,
+            updatedAt: checkout.createdAt,
             lastProccessedTabs: checkout.tabs,
             checkouts: [checkout]
         };
@@ -238,7 +239,6 @@ export function createCheckout({
         const checkout: m.Checkout = {
             id: uuid(),
             createdAt: dateString,
-            updatedAt: dateString,
             items: currencyByName,
             tabs: tabsUsed
         };

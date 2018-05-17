@@ -2,7 +2,8 @@ import * as fs from 'fs-extra';
 import * as url from 'url';
 import * as _ from 'lodash';
 import { remote } from 'electron';
-import { format } from 'date-fns';
+import * as format from 'date-fns/format';
+import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 
 import {
     settingsPath,
@@ -134,6 +135,10 @@ export function formatDate(
     formatString = DateFormats.Default
 ) {
     return format(date, formatString);
+}
+
+export function humanizeDate(date: string | number | Date) {
+    return distanceInWordsToNow(date, { addSuffix: true });
 }
 
 export function isRemoveOnlyTab(tab: Tab): boolean {

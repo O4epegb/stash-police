@@ -2,10 +2,16 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import * as _ from 'lodash';
+import * as classnames from 'classnames';
 
 import * as m from '../models';
 import { getLeagues, createCheckout } from '../services';
-import { formatDate, DateFormats, getTotalItemsValue } from '../utils';
+import {
+    formatDate,
+    humanizeDate,
+    DateFormats,
+    getTotalItemsValue
+} from '../utils';
 import { Routes } from '../constants';
 import { Store } from '../Store';
 
@@ -75,6 +81,7 @@ export class ReportPage extends React.Component<Props, State> {
             console.log('created new checkout', checkout);
             const newReport: m.Report = {
                 ...activeReport,
+                updatedAt: checkout.createdAt,
                 checkouts: [...activeReport.checkouts, checkout]
             };
 
@@ -108,7 +115,7 @@ export class ReportPage extends React.Component<Props, State> {
         }
 
         return (
-            <div>
+            <div className="report">
                 <h3>
                     Report {report.name}
                     <button onClick={this.deleteReport}>Delete</button>
@@ -119,51 +126,65 @@ export class ReportPage extends React.Component<Props, State> {
                 {formatDate(report.createdAt, DateFormats.DefaultWithTime)}
                 <hr />
                 {report.checkouts.length > 0 && (
-                    <div>
-                        <div>Checkouts</div>
-                        <div>
-                            {report.checkouts.map((checkout, index) => (
-                                <div
-                                    key={checkout.id}
-                                    onClick={() =>
-                                        this.selectCheckout(checkout.id)
-                                    }
-                                >
-                                    {selectedCheckout &&
-                                        checkout.id === selectedCheckout.id &&
-                                        '+'}{' '}
-                                    <b>Checkout {index}</b>{' '}
-                                    {formatDate(
-                                        checkout.createdAt,
-                                        DateFormats.DefaultWithTime
-                                    )}, total value:{' '}
-                                    {getTotalItemsValue(checkout.items)}
-                                </div>
-                            ))}
+                    <div className="checkouts__container">
+                        <div className="checkouts__title">Checkouts</div>
+                        <div className="checkouts__container">
+                            <div className="checkouts__list">
+                                {report.checkouts.map((checkout, index) => (
+                                    <div
+                                        key={checkout.id}
+                                        className={classnames(
+                                            'checkouts__list-item',
+                                            {
+                                                'checkouts__list-item_active':
+                                                    selectedCheckout &&
+                                                    checkout.id ===
+                                                        selectedCheckout.id
+                                            }
+                                        )}
+                                        onClick={() =>
+                                            this.selectCheckout(checkout.id)
+                                        }
+                                    >
+                                        <b>Checkout {index}</b>
+                                        <br />
+                                        {humanizeDate(checkout.createdAt)}
+                                        <br />
+                                        {getTotalItemsValue(checkout.items)}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )}
                 {selectedCheckout && (
-                    <div key={selectedCheckout.id}>
-                        Checkout {selectedCheckoutIndex} - items:{' '}
-                        {selectedCheckout.items.length}
-                        {_.map(selectedCheckout.items, item => (
-                            <div key={item.name}>
-                                <img
-                                    src={item.originalItem.icon.replace(
-                                        /\?.+/,
-                                        ''
-                                    )}
-                                    alt={item.name}
-                                    style={{
-                                        width: '37px',
-                                        height: '37px'
-                                    }}
-                                />
-                                {item.name} - {item.cost} - stackSize{' '}
-                                {item.stackSize}
-                            </div>
-                        ))}
+                    <div className="report-items">
+                        <div className="report-items__title">
+                            Checkout {selectedCheckoutIndex} -{' '}
+                            {Object.keys(selectedCheckout.items).length} items:
+                        </div>
+                        <div className="report-items__list">
+                            {_.map(selectedCheckout.items, item => (
+                                <div
+                                    key={item.name}
+                                    className="report-items__item"
+                                >
+                                    <img
+                                        src={item.originalItem.icon.replace(
+                                            /\?.+/,
+                                            ''
+                                        )}
+                                        alt={item.name}
+                                        style={{
+                                            width: '37px',
+                                            height: '37px'
+                                        }}
+                                    />
+                                    {item.name} - {item.cost} - stackSize{' '}
+                                    {item.stackSize}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>

@@ -58,19 +58,28 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
         const { isLoading } = this.state;
 
         return (
-            <div>
-                {isLoading ? (
-                    <div>Logging in</div>
-                ) : (
-                    <div>
-                        <input
-                            type="text"
-                            value={this.state.sessionId}
-                            onChange={this.changeSessionId}
-                        />
-                        <button onClick={this.loginUser}>Login</button>
-                    </div>
-                )}
+            <div className="login">
+                <div className="login__wrapper">
+                    {isLoading ? (
+                        <div className="login__loader">Logging in</div>
+                    ) : (
+                        <div className="login__form">
+                            <h1 className="login__form-title">Stash Police</h1>
+                            <input
+                                type="text"
+                                className="login__form-input"
+                                value={this.state.sessionId}
+                                onChange={this.changeSessionId}
+                            />
+                            <button
+                                onClick={this.loginUser}
+                                className="login__form-button"
+                            >
+                                Login
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         );
     }

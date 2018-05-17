@@ -11,6 +11,7 @@ export interface Report {
     name: string;
     id: string;
     createdAt: string;
+    updatedAt: string;
     league: League;
     checkouts: Checkouts;
     lastProccessedTabs: Tabs;
@@ -21,7 +22,6 @@ export type Checkouts = Array<Checkout>;
 export interface Checkout {
     id: string;
     createdAt: string;
-    updatedAt: string;
     items: CheckoutItems;
     tabs: Tabs;
 }

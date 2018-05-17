@@ -10,7 +10,9 @@ function onAppReady() {
         height: 720,
         center: true,
         frame: true,
-        title: 'Stash Police'
+        title: 'Stash Police',
+        minHeight: 700,
+        minWidth: 900
         // webPreferences: {
         //     webSecurity: false
         // }
