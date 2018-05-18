@@ -14,11 +14,11 @@ import {
 } from './utils';
 import { Store } from './Store';
 
-import { StartupPage } from './components/StartupPage';
-import { LoginPage } from './components/LoginPage';
-import { ReportPage } from './components/ReportPage';
-import { MainPage } from './components/MainPage';
-import { CreateReportPage } from './components/CreateReportPage';
+import { StartupPage } from './pages/StartupPage';
+import { LoginPage } from './pages/LoginPage';
+import { ReportPage } from './pages/ReportPage';
+import { MainPage } from './pages/MainPage';
+import { CreateReportPage } from './pages/CreateReportPage';
 import { Reports } from './components/Reports';
 import { Layout } from './components/Layout';
 import { UserInfo } from './models';
@@ -36,7 +36,6 @@ type Props = RouteComponentProps<any> & {};
 
 interface State {
     tabs: Array<any>;
-    currencyByName;
 }
 
 @observer
@@ -49,8 +48,7 @@ export class App extends React.Component<Props, State> {
         // globalHistory = props.history;
 
         this.state = {
-            tabs: [],
-            currencyByName: {}
+            tabs: []
         };
     }
 
@@ -124,32 +122,27 @@ export class App extends React.Component<Props, State> {
                         <Layout
                             onLogout={this.onLogout}
                             leftColumn={() => <Route component={Reports} />}
-                            rightColumn={() => (
-                                <React.Fragment>
-                                    <Route
-                                        exact
-                                        path={Routes.Main}
-                                        component={MainPage}
+                        >
+                            <Route
+                                exact
+                                path={Routes.Main}
+                                component={MainPage}
+                            />
+                            <Route
+                                exact
+                                path={Routes.Report}
+                                component={ReportPage}
+                            />
+                            <Route
+                                exact
+                                path={Routes.ReportsCreate}
+                                render={props => (
+                                    <CreateReportPage
+                                        onReportCreate={this.onReportCreated}
                                     />
-                                    <Route
-                                        exact
-                                        path={Routes.Report}
-                                        component={ReportPage}
-                                    />
-                                    <Route
-                                        exact
-                                        path={Routes.ReportsCreate}
-                                        render={props => (
-                                            <CreateReportPage
-                                                onReportCreate={
-                                                    this.onReportCreated
-                                                }
-                                            />
-                                        )}
-                                    />
-                                </React.Fragment>
-                            )}
-                        />
+                                )}
+                            />
+                        </Layout>
                     </Switch>
                 </div>
             </div>

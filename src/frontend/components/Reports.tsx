@@ -5,10 +5,11 @@ import * as _ from 'lodash';
 import posed, { PoseGroup } from 'react-pose';
 import { tween } from 'popmotion';
 
-import { formatDate, DateFormats, getTotalItemsValue } from '../utils';
+import { humanizeDate, getTotalItemsValue } from '../utils';
 import { Routes } from '../constants';
 import { Report } from '../models';
 import { Store } from '../Store';
+import { DeleteButton } from './DeleteButton';
 
 const ListItem = posed.div({
     enter: {
@@ -54,8 +55,8 @@ export class Reports extends React.Component<Props, {}> {
         }
 
         return (
-            <div>
-                <h3>Reports</h3>
+            <div className="reports">
+                <h3 className="reports__title">Reports</h3>
                 <div className="reports__list">
                     <PoseGroup animateOnMount={false}>
                         {reports.map(report => (
@@ -66,10 +67,11 @@ export class Reports extends React.Component<Props, {}> {
                                     {report.name}
                                 </Link>
                                 <br />
-                                {formatDate(
-                                    report.createdAt,
-                                    DateFormats.DefaultWithTime
-                                )}
+                                {report.league.id}
+                                <br />
+                                Created {humanizeDate(report.createdAt)}
+                                <br />
+                                Updated {humanizeDate(report.updatedAt)}
                                 <br />
                                 Total value:{' '}
                                 {getTotalItemsValue(
@@ -80,11 +82,11 @@ export class Reports extends React.Component<Props, {}> {
                                 <br />
                                 Tabs: {report.lastProccessedTabs.length}
                                 <br />
-                                <button
+                                <DeleteButton
                                     onClick={() => this.deleteReport(report)}
                                 >
                                     Delete
-                                </button>
+                                </DeleteButton>
                             </ListItem>
                         ))}
                     </PoseGroup>

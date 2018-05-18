@@ -38,7 +38,6 @@ const Main = posed.main();
 
 interface Props {
     leftColumn(): React.ReactElement<any>;
-    rightColumn(): React.ReactElement<any>;
     onLogout(): any;
 }
 
@@ -49,7 +48,7 @@ export class Layout extends React.Component<Props> {
     };
 
     render() {
-        const { leftColumn, rightColumn, onLogout } = this.props;
+        const { leftColumn, children, onLogout } = this.props;
 
         return (
             <div className="layout">
@@ -90,7 +89,6 @@ export class Layout extends React.Component<Props> {
                             )}
                         </div>
                     </Header>
-
                     <Main className="layout__content" key="layout__content">
                         <Column
                             className="layout__column"
@@ -104,7 +102,7 @@ export class Layout extends React.Component<Props> {
                             key="right-column"
                             i={1}
                         >
-                            {rightColumn()}
+                            {children}
                         </Column>
                     </Main>
                 </PoseGroup>

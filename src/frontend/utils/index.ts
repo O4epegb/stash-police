@@ -31,35 +31,43 @@ export function setSessionIdCookie(sessionId: string) {
             domain: url.parse(ApiUrls.index).host
         };
 
-        remote.session.defaultSession.cookies.set(cookie, error => {
-            if (error) {
-                console.error(error);
-                return reject();
-            }
-
-            updateSettings({ sessionId });
-
-            return resolve();
-        });
-    });
-}
-
-export function removeSessionIdCookie() {
-    return new Promise((resolve, reject) => {
-        remote.session.defaultSession.cookies.remove(
-            ApiUrls.index,
-            poeCookieName,
-            error => {
+        if (remote.session.defaultSession) {
+            remote.session.defaultSession.cookies.set(cookie, error => {
                 if (error) {
                     console.error(error);
                     return reject();
                 }
 
-                updateSettings({ sessionId: '' });
+                updateSettings({ sessionId });
 
                 return resolve();
-            }
-        );
+            });
+        } else {
+            return reject();
+        }
+    });
+}
+
+export function removeSessionIdCookie() {
+    return new Promise((resolve, reject) => {
+        if (remote.session.defaultSession) {
+            remote.session.defaultSession.cookies.remove(
+                ApiUrls.index,
+                poeCookieName,
+                (error: any) => {
+                    if (error) {
+                        console.error(error);
+                        return reject();
+                    }
+
+                    updateSettings({ sessionId: '' });
+
+                    return resolve();
+                }
+            );
+        } else {
+            return reject();
+        }
     });
 }
 

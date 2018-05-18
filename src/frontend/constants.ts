@@ -16,7 +16,7 @@ export enum Routes {
 
 export enum Colors {
     blue = '#205B9C',
-    red = '#7B0C10',
+    red = '#c53b12',
     brightBlue = '#00C8FE',
     brightRed = '#FE0000',
     textDark = '#3b2c1b',

@@ -1,7 +1,7 @@
 export interface Settings {
     version: string;
     sessionId?: string;
-    userInfo?: UserInfo;
+    userInfo: UserInfo;
 }
 
 export interface UserInfo {

@@ -6,14 +6,10 @@ import * as classnames from 'classnames';
 
 import * as m from '../models';
 import { getLeagues, createCheckout } from '../services';
-import {
-    formatDate,
-    humanizeDate,
-    DateFormats,
-    getTotalItemsValue
-} from '../utils';
+import { humanizeDate, getTotalItemsValue } from '../utils';
 import { Routes } from '../constants';
 import { Store } from '../Store';
+import { DeleteButton } from '../components/DeleteButton';
 
 type Props = RouteComponentProps<{ id: string }> & {};
 
@@ -97,11 +93,32 @@ export class ReportPage extends React.Component<Props, State> {
         Store.deleteReport(activeReport);
     };
 
+    deleteCheckout = () => {
+        const { activeReport } = Store;
+        const { selectedCheckoutId } = this.state;
+
+        const newReport = {
+            ...activeReport,
+            updatedAt: new Date().toISOString(),
+            checkouts: activeReport.checkouts.filter(
+                checkout => checkout.id !== selectedCheckoutId
+            )
+        };
+
+        this.setState({ selectedCheckoutId: null });
+        Store.updateReport(newReport);
+        Store.setActiveReport(newReport.id);
+    };
+
     render() {
         const { selectedCheckoutId, isActiveLeague } = this.state;
         const { match } = this.props;
 
         const report = Store.activeReport;
+
+        if (!report) {
+            return <div>Report with id {match.params.id} is not found</div>;
+        }
 
         const selectedCheckout = report.checkouts.find(
             checkout => checkout.id === selectedCheckoutId
@@ -110,20 +127,20 @@ export class ReportPage extends React.Component<Props, State> {
             selectedCheckout
         );
 
-        if (!report) {
-            return <div>Report with id {match.params.id} is not found</div>;
-        }
-
         return (
             <div className="report">
                 <h3>
                     Report {report.name}
-                    <button onClick={this.deleteReport}>Delete</button>
+                    <DeleteButton onClick={this.deleteReport}>
+                        Delete
+                    </DeleteButton>
                     {isActiveLeague && (
                         <button onClick={this.updateReport}>Update</button>
                     )}
                 </h3>
-                {formatDate(report.createdAt, DateFormats.DefaultWithTime)}
+                Created {humanizeDate(report.createdAt)}
+                <br />
+                Updated {humanizeDate(report.updatedAt)}
                 <hr />
                 {report.checkouts.length > 0 && (
                     <div className="checkouts__container">
@@ -131,27 +148,32 @@ export class ReportPage extends React.Component<Props, State> {
                         <div className="checkouts__container">
                             <div className="checkouts__list">
                                 {report.checkouts.map((checkout, index) => (
-                                    <div
-                                        key={checkout.id}
-                                        className={classnames(
-                                            'checkouts__list-item',
-                                            {
-                                                'checkouts__list-item_active':
-                                                    selectedCheckout &&
-                                                    checkout.id ===
-                                                        selectedCheckout.id
+                                    <React.Fragment key={checkout.id}>
+                                        <div
+                                            className={classnames(
+                                                'checkouts__list-item',
+                                                {
+                                                    'checkouts__list-item_active':
+                                                        selectedCheckout &&
+                                                        checkout.id ===
+                                                            selectedCheckout.id
+                                                }
+                                            )}
+                                            onClick={() =>
+                                                this.selectCheckout(checkout.id)
                                             }
+                                        >
+                                            <b>Checkout {index}</b>
+                                            <br />
+                                            {humanizeDate(checkout.createdAt)}
+                                            <br />
+                                            {getTotalItemsValue(checkout.items)}
+                                        </div>
+                                        {index !==
+                                            report.checkouts.length - 1 && (
+                                            <div className="checkouts__list-item-separator" />
                                         )}
-                                        onClick={() =>
-                                            this.selectCheckout(checkout.id)
-                                        }
-                                    >
-                                        <b>Checkout {index}</b>
-                                        <br />
-                                        {humanizeDate(checkout.createdAt)}
-                                        <br />
-                                        {getTotalItemsValue(checkout.items)}
-                                    </div>
+                                    </React.Fragment>
                                 ))}
                             </div>
                         </div>
@@ -160,8 +182,14 @@ export class ReportPage extends React.Component<Props, State> {
                 {selectedCheckout && (
                     <div className="report-items">
                         <div className="report-items__title">
-                            Checkout {selectedCheckoutIndex} -{' '}
-                            {Object.keys(selectedCheckout.items).length} items:
+                            Checkout {selectedCheckoutIndex}
+                            <DeleteButton onClick={this.deleteCheckout}>
+                                Delete
+                            </DeleteButton>
+                            <div>
+                                {Object.keys(selectedCheckout.items).length}{' '}
+                                items:
+                            </div>
                         </div>
                         <div className="report-items__list">
                             {_.map(selectedCheckout.items, item => (
