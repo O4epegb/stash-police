@@ -105,7 +105,7 @@ export class CreateReportPage extends React.Component<Props, State> {
         });
     };
 
-    selectAllTo = (bool: boolean) => {
+    selectAllTabsToBoolean = (bool: boolean) => {
         this.setState({
             tabs: this.state.tabs.map(t => {
                 return {
@@ -233,10 +233,18 @@ export class CreateReportPage extends React.Component<Props, State> {
                                 <span>You need to select at least one tab</span>
                             )}
                             <div>
-                                <button onClick={() => this.selectAllTo(true)}>
+                                <button
+                                    onClick={() =>
+                                        this.selectAllTabsToBoolean(true)
+                                    }
+                                >
                                     Select all
                                 </button>
-                                <button onClick={() => this.selectAllTo(false)}>
+                                <button
+                                    onClick={() =>
+                                        this.selectAllTabsToBoolean(false)
+                                    }
+                                >
                                     Deselect all
                                 </button>
                             </div>

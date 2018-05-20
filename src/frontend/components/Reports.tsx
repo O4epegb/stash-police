@@ -9,9 +9,10 @@ import { humanizeDate, getTotalItemsValue } from '../utils';
 import { Routes } from '../constants';
 import { Report } from '../models';
 import { Store } from '../Store';
-import { DeleteButton } from './DeleteButton';
+// import { DeleteButton } from './DeleteButton';
+import { Value } from './Value';
 
-const ListItem = posed.div({
+const ReportsItem = posed.div({
     enter: {
         translateX: '0%',
         opacity: 1,
@@ -60,7 +61,10 @@ export class Reports extends React.Component<Props, {}> {
                 <div className="reports__list">
                     <PoseGroup animateOnMount={false}>
                         {reports.map(report => (
-                            <ListItem key={report.id} className="reports__item">
+                            <ReportsItem
+                                key={report.id}
+                                className="reports__item"
+                            >
                                 <Link
                                     to={Routes.Report.replace(':id', report.id)}
                                 >
@@ -74,20 +78,22 @@ export class Reports extends React.Component<Props, {}> {
                                 Updated {humanizeDate(report.updatedAt)}
                                 <br />
                                 Total value:{' '}
-                                {getTotalItemsValue(
-                                    _.last(report.checkouts).items
-                                )}
+                                <Value
+                                    value={getTotalItemsValue(
+                                        _.last(report.checkouts).items
+                                    )}
+                                />
                                 <br />
                                 Checkouts: {report.checkouts.length}
                                 <br />
                                 Tabs: {report.lastProccessedTabs.length}
                                 <br />
-                                <DeleteButton
+                                {/* <DeleteButton
                                     onClick={() => this.deleteReport(report)}
                                 >
                                     Delete
-                                </DeleteButton>
-                            </ListItem>
+                                </DeleteButton> */}
+                            </ReportsItem>
                         ))}
                     </PoseGroup>
                 </div>

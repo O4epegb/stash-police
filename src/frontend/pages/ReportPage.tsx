@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { observer } from 'mobx-react';
+import ReactTable from 'react-table';
 import * as _ from 'lodash';
 import * as classnames from 'classnames';
 
@@ -10,6 +11,7 @@ import { humanizeDate, getTotalItemsValue } from '../utils';
 import { Routes } from '../constants';
 import { Store } from '../Store';
 import { DeleteButton } from '../components/DeleteButton';
+import { Value } from '../components/Value';
 
 type Props = RouteComponentProps<{ id: string }> & {};
 
@@ -27,8 +29,11 @@ export class ReportPage extends React.Component<Props, State> {
 
         console.log('active report', Store.activeReport);
 
+        const report = Store.activeReport;
+        const checkouts = report && report.checkouts;
+
         this.state = {
-            selectedCheckoutId: null,
+            selectedCheckoutId: checkouts && _.last(checkouts).id,
             isActiveLeague: false
         };
     }
@@ -39,8 +44,15 @@ export class ReportPage extends React.Component<Props, State> {
 
     componentDidUpdate(prevProps: Props, prevState: State) {
         if (this.props.match.params.id !== prevProps.match.params.id) {
-            this.setState({ isActiveLeague: false });
             Store.setActiveReport(this.props.match.params.id);
+
+            const report = Store.activeReport;
+            const checkouts = report && report.checkouts;
+
+            this.setState({
+                selectedCheckoutId: checkouts && _.last(checkouts).id,
+                isActiveLeague: false
+            });
             this.checkIfLeagueIsActive();
         }
     }
@@ -141,7 +153,6 @@ export class ReportPage extends React.Component<Props, State> {
                 Created {humanizeDate(report.createdAt)}
                 <br />
                 Updated {humanizeDate(report.updatedAt)}
-                <hr />
                 {report.checkouts.length > 0 && (
                     <div className="checkouts__container">
                         <div className="checkouts__title">Checkouts</div>
@@ -167,7 +178,11 @@ export class ReportPage extends React.Component<Props, State> {
                                             <br />
                                             {humanizeDate(checkout.createdAt)}
                                             <br />
-                                            {getTotalItemsValue(checkout.items)}
+                                            <Value
+                                                value={getTotalItemsValue(
+                                                    checkout.items
+                                                )}
+                                            />
                                         </div>
                                         {index !==
                                             report.checkouts.length - 1 && (
@@ -183,36 +198,73 @@ export class ReportPage extends React.Component<Props, State> {
                     <div className="report-items">
                         <div className="report-items__title">
                             Checkout {selectedCheckoutIndex}
-                            <DeleteButton onClick={this.deleteCheckout}>
-                                Delete
-                            </DeleteButton>
+                            {report.checkouts.length > 1 && (
+                                <DeleteButton onClick={this.deleteCheckout}>
+                                    Delete
+                                </DeleteButton>
+                            )}
+                            <div>
+                                <Value
+                                    value={getTotalItemsValue(
+                                        selectedCheckout.items
+                                    )}
+                                />
+                            </div>
                             <div>
                                 {Object.keys(selectedCheckout.items).length}{' '}
                                 items:
                             </div>
                         </div>
-                        <div className="report-items__list">
-                            {_.map(selectedCheckout.items, item => (
-                                <div
-                                    key={item.name}
-                                    className="report-items__item"
-                                >
-                                    <img
-                                        src={item.originalItem.icon.replace(
-                                            /\?.+/,
-                                            ''
-                                        )}
-                                        alt={item.name}
-                                        style={{
-                                            width: '37px',
-                                            height: '37px'
-                                        }}
-                                    />
-                                    {item.name} - {item.cost} - stackSize{' '}
-                                    {item.stackSize}
-                                </div>
-                            ))}
-                        </div>
+                        <ReactTable
+                            data={_.map(selectedCheckout.items, item => item)}
+                            columns={[
+                                {
+                                    Header: 'Item',
+                                    accessor: 'name',
+                                    Cell: ({ original: item }) => (
+                                        <div className="report__item-cell">
+                                            <img
+                                                className="report__item-image"
+                                                src={item.originalItem.icon.replace(
+                                                    /\?.+/,
+                                                    ''
+                                                )}
+                                                alt={item.name}
+                                            />
+                                            <div className="report__item-name">
+                                                {item.name}
+                                            </div>
+                                        </div>
+                                    )
+                                },
+                                {
+                                    Header: 'Cost',
+                                    className: 'report__item-cell',
+                                    accessor: 'cost',
+                                    Cell: row => <Value value={row.value} />
+                                },
+                                {
+                                    Header: 'Stack size',
+                                    className: 'report__item-cell',
+                                    accessor: 'stackSize',
+                                    Cell: row => <Value value={row.value} />
+                                }
+                            ]}
+                            showPagination={false}
+                            defaultPageSize={
+                                Object.keys(selectedCheckout.items).length
+                            }
+                            defaultSorted={[
+                                {
+                                    id: 'cost',
+                                    desc: true
+                                }
+                            ]}
+                            style={{
+                                flex: '1'
+                            }}
+                            className="-striped -highlight"
+                        />
                     </div>
                 )}
             </div>

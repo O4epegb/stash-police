@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { shell } from 'electron';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import posed, { PoseGroup } from 'react-pose';
 import { tween } from 'popmotion';
 
-import { settingsPath, Routes, isProduction } from '../constants';
+import { Routes, isProduction } from '../constants';
 import { Store } from '../Store';
+import { DevMenu } from './DevMenu';
 
 const Column = posed.div({
     enter: {
@@ -43,10 +43,6 @@ interface Props {
 
 @observer
 export class Layout extends React.Component<Props> {
-    openConfigFolder = () => {
-        shell.showItemInFolder(settingsPath);
-    };
-
     render() {
         const { leftColumn, children, onLogout } = this.props;
 
@@ -65,7 +61,7 @@ export class Layout extends React.Component<Props> {
                                     {Store.accountName}
                                 </div>
                                 <div
-                                    className="header__account-logout"
+                                    className="header__account-logout pseudo-link"
                                     onClick={onLogout}
                                 >
                                     Logout
@@ -77,16 +73,9 @@ export class Layout extends React.Component<Props> {
                                 className="header__menu-item"
                                 to={Routes.ReportsCreate}
                             >
-                                New Report
+                                Create new Report
                             </Link>
-                            {!isProduction && (
-                                <div
-                                    className="header__menu-item"
-                                    onClick={this.openConfigFolder}
-                                >
-                                    Open config folder
-                                </div>
-                            )}
+                            {!isProduction && <DevMenu />}
                         </div>
                     </Header>
                     <Main className="layout__content" key="layout__content">

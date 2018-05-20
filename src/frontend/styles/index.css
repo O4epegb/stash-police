@@ -1,16 +1,20 @@
-$textColorWhite: #DCD3C3;
-/* $textColorGolden: #a38d6d; */
-$textColorGolden: #c7ab81;
-$textColor: $textColorGolden;
-$linkColor: $textColorWhite;
-$mainBg: #0F0F0F;
-$mainBorder: #302E2E;
-$buttonBorder: #1a1a1a;
-$buttonBg: #333333;
-$buttonText: #ffffff;
-$red: #c53b12;
-$blue: #02a6f2;
-
+:root {
+    --textColorWhite: #DCD3C3;
+    /* --textColorGolden: #a38d6d; */
+    --textColorGolden: #c7ab81;
+    --textColor: var(--textColorGolden);
+    --linkColor: var(--textColorWhite);
+    --mainBg: #0f0f0f;
+    --mainBgRgb: 15,15,15;
+    --mainBorder: #302E2E;
+    --buttonBorder: #1a1a1a;
+    --buttonBg: #333333;
+    --buttonText: #ffffff;
+    --red: #c53b12;
+    --blue: #0cabe5;
+    --primary: var(--red);
+    --secondary: var(--blue);
+  }
 
 * {
     box-sizing: border-box;
@@ -18,17 +22,18 @@ $blue: #02a6f2;
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
+    height: 6px;
 
     &-track {
-        background: #f1f1f1; 
+        background: #757575;
     }
 
     &-thumb {
-        background: #888; 
+        background: #212121;
 
         &:hover {
-            background: #555; 
+            background: #333333;
         }
     }
 }
@@ -44,23 +49,31 @@ body,
 body {
     min-width: 800px;
     min-height: 600px;
-    color: $textColor;
+    color: var(--textColor);
     user-select: none;
     cursor: default;
     font-family: 'Roboto', sans-serif;
 }
 
 a {
-    color: $linkColor;
+    color: var(--linkColor);
     text-decoration: none;
+}
+
+.pseudo-link {
+    color: var(--linkColor);
+}
+
+hr {
+    width: 100%;
 }
 
 button {
     padding: 4px 8px;
-    border: 2px solid $buttonBorder;
+    border: 2px solid var(--buttonBorder);
     border: 2px solid #989999;
     border-radius: 4px;
-    color: $buttonText;
+    color: var(--buttonText);
     background-color: transparent;
     cursor: pointer;
 
@@ -81,8 +94,6 @@ button {
     max-width: 1280px;
     width: 100%;
     height: 100%;
-    /* background-color: $mainBg; */
-    /* box-shadow: 0 2px 4px 2px rgba($mainBg, 0.88); */
     z-index: 1;
 
     &-container {
@@ -94,18 +105,8 @@ button {
         height: 100%;
         background-image: url('../assets/main-bg.jpg');
         background-size: cover;
-        background-color: $mainBg;
+        background-color: var(--mainBg);
         overflow: hidden;
-
-        /* &:after {
-            position: absolute;
-            content: '';
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba($mainBg, 0.80);
-        } */
     }
 }
 
@@ -134,7 +135,7 @@ button {
         align-items: stretch;
         width: 400px;
         padding: 40px;
-        background-color: $mainBg;
+        background-color: var(--mainBg);
     }
 
     &__loader {
@@ -173,7 +174,7 @@ button {
         right: 0;
         bottom: 0;
         left: 0;
-        background-color: rgba($mainBg, 0.8);
+        background-color: rgba(var(--mainBgRgb), 0.8);
     }
 }
 
@@ -194,15 +195,16 @@ button {
     &__column {
         padding: 10px;
         overflow: auto;
-        background-color: rgba($mainBg, 0.8);
+        background-color: rgba(var(--mainBgRgb), 0.8);
     }
 }
 
 .header {
+    position: relative;
     display: flex;
     height: 68px;
     justify-content: space-between;
-    background-color: $mainBg;
+    background-color: var(--mainBg);
 
     &__account {
         display: flex;
@@ -273,8 +275,8 @@ h1 {
     &__item {
         padding: 10px;
         border-radius: 4px;
-        background-color: $mainBg;
-        border: 1px solid $mainBorder;
+        background-color: var(--mainBg);
+        border: 1px solid var(--mainBorder);
 
         & + & {
             margin-top: 10px;
@@ -320,19 +322,22 @@ h1 {
     
     &__list {
         display: flex;
-        flex-wrap: nowrap;
         align-items: center;
+        flex-wrap: nowrap;
+        margin: 10px 0;
+        padding-bottom: 10px;
         overflow-x: auto;
     }
 
     &__list-item {
         flex: 0 0 auto;
-        background-color: $mainBg;
-        border: 2px solid $mainBg;
+        padding: 10px;
+        background-color: var(--mainBg);
+        border: 2px solid var(--mainBg);
         z-index: 1;
 
         &_active {
-            border-color: $red;
+            border-color: var(--primary);
         }
     }
 
@@ -340,7 +345,7 @@ h1 {
         flex: 0 0 auto;
         height: 2px;
         width: 40px;
-        background-color: $red;
+        background-color: var(--primary);
     }
 } 
 
@@ -350,9 +355,30 @@ h1 {
     flex-direction: column;
     align-items: stretch;
 
+    &__item {
+        &-cell {
+            display: flex;
+            align-items: center;
+        }
+
+        &-image {
+            flex: 0 0 auto;
+            width: 37px;
+            height: 37px;
+            margin-right: 5px;
+        }
+
+        &-name {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
 }
 
 .report-items {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     overflow-y: auto;
 }
@@ -381,4 +407,26 @@ h1 {
         align-items: center;
         transition: left 0.15s;
     }
+}
+
+.numeric-value {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.ReactTable .rt-thead .rt-th.-sort-asc {
+    box-shadow: inset 0 3px 0 0 var(--primary);
+}
+
+.ReactTable .rt-thead .rt-th.-sort-desc {
+    box-shadow: inset 0 -3px 0 0 var(--primary);
+}
+
+.dev-menu {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    padding: 10px;
+    transform: translateX(-50%);
+    background-color: var(--primary);
+    color: #fff;
 }

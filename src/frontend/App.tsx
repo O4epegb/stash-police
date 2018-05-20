@@ -3,8 +3,9 @@ import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { configure } from 'mobx';
 import { observer } from 'mobx-react';
 
-import * as s from './services';
-import * as m from './models';
+import { Store } from './Store';
+import { getAccountInfo } from './services';
+import { Report } from './models';
 import { isProduction, Routes } from './constants';
 import {
     getSettings,
@@ -12,7 +13,6 @@ import {
     setSessionIdCookie,
     removeSessionIdCookie
 } from './utils';
-import { Store } from './Store';
 
 import { StartupPage } from './pages/StartupPage';
 import { LoginPage } from './pages/LoginPage';
@@ -25,13 +25,6 @@ import { UserInfo } from './models';
 
 configure({ enforceActions: true });
 
-// Ensure we start application at main route
-window.location.hash = '';
-
-// let globalHistory: RouteComponentProps<any>['history'] = null;
-
-const settings = getSettings();
-
 type Props = RouteComponentProps<any> & {};
 
 interface State {
@@ -41,11 +34,10 @@ interface State {
 @observer
 export class App extends React.Component<Props, State> {
     startupTime: number = 0;
+    settings = getSettings();
 
     constructor(props: Props) {
         super(props);
-
-        // globalHistory = props.history;
 
         this.state = {
             tabs: []
@@ -59,11 +51,11 @@ export class App extends React.Component<Props, State> {
     init = () => {
         this.startupTime = Date.now();
 
-        if (!settings.sessionId || !settings.userInfo.accountName) {
+        if (!this.settings.sessionId || !this.settings.userInfo.accountName) {
             this.goToRoute(Routes.Login);
         } else {
-            setSessionIdCookie(settings.sessionId)
-                .then(s.getAccountInfo)
+            setSessionIdCookie(this.settings.sessionId)
+                .then(getAccountInfo)
                 .then(userInfo => {
                     this.onLoginSuccess(userInfo, true);
                 })
@@ -96,7 +88,7 @@ export class App extends React.Component<Props, State> {
         });
     };
 
-    onReportCreated = (report: m.Report) => {
+    onReportCreated = (report: Report) => {
         this.props.history.push(Routes.Report.replace(':id', report.id));
     };
 
