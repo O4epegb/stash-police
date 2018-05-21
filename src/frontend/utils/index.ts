@@ -1,5 +1,6 @@
 import * as fs from 'fs-extra';
 import * as url from 'url';
+import * as uuidv4 from 'uuid/v4';
 import * as _ from 'lodash';
 import { remote } from 'electron';
 import * as format from 'date-fns/format';
@@ -13,8 +14,6 @@ import {
 } from '../constants';
 import { Reports, Settings, ReportsFile, Tab, CheckoutItems } from '../models';
 import { prefixes, suffixes } from '../data';
-
-import * as uuidv4 from 'uuid/v4';
 
 export const uuid = uuidv4;
 

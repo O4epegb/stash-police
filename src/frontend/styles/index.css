@@ -14,6 +14,8 @@
     --blue: #0cabe5;
     --primary: var(--red);
     --secondary: var(--blue);
+    /* --primary: var(--blue);
+    --secondary: var(--red); */
   }
 
 * {
@@ -26,14 +28,14 @@
     height: 6px;
 
     &-track {
-        background: #757575;
+        background: #222222;
     }
 
     &-thumb {
-        background: #212121;
+        background: #DCD3C3;
 
         &:hover {
-            background: #333333;
+            background: #888888;
         }
     }
 }
@@ -66,6 +68,25 @@ a {
 
 hr {
     width: 100%;
+}
+
+h1,
+h3,
+h2 {
+    font-weight: 400;
+    margin: 0;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 25px;
+}
+
+h3 {
+    font-size: 18px;
 }
 
 button {
@@ -164,6 +185,10 @@ button {
 
 .create-report {
     position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 
     &__loader {
         position: absolute;
@@ -175,6 +200,15 @@ button {
         bottom: 0;
         left: 0;
         background-color: rgba(var(--mainBgRgb), 0.8);
+    }
+
+    &__tabs-list {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    &__tab {
+        padding: 4px 8px;
     }
 }
 
@@ -252,19 +286,13 @@ button {
     }
 }
 
-h1 {
-    font-size: 40px;
-    font-weight: 400;
-    margin: 0;
-}
-
 .reports {
     display: flex;
     flex-direction: column;
     height: 100%;
 
     &__title {
-
+        margin-bottom: 20px;
     }
 
     &__list {
@@ -355,6 +383,10 @@ h1 {
     flex-direction: column;
     align-items: stretch;
 
+    &__title {
+        margin-bottom: 20px;
+    }
+
     &__item {
         &-cell {
             display: flex;
@@ -392,7 +424,7 @@ h1 {
 
     &__wrapper {
         position: relative;
-        height: 30px;
+        height: 20px;
         white-space: nowrap;
     }
 
@@ -411,6 +443,10 @@ h1 {
 
 .numeric-value {
     font-family: 'Roboto Mono', monospace;
+}
+
+.ReactTable .rt-thead .rt-th {
+    transition: box-shadow 0.3s;
 }
 
 .ReactTable .rt-thead .rt-th.-sort-asc {

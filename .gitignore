@@ -1,4 +1,5 @@
 .vscode
+.forever-ignore
 node_modules
 build
 npm-debug.log

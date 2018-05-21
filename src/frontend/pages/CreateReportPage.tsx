@@ -116,6 +116,17 @@ export class CreateReportPage extends React.Component<Props, State> {
         });
     };
 
+    selectAllCurrencyTabs = () => {
+        this.setState({
+            tabs: this.state.tabs.map(t => {
+                return {
+                    ...t,
+                    isSelected: t.type === m.TabType.Currency
+                };
+            })
+        });
+    };
+
     getNewReportName = () => {
         return generateAffixedName('Report');
     };
@@ -221,7 +232,7 @@ export class CreateReportPage extends React.Component<Props, State> {
                 )}
                 {isFetchingTabs && <div>Loading Tabs</div>}
                 {tabs && (
-                    <div>
+                    <React.Fragment>
                         <div>
                             <button
                                 disabled={showWarning}
@@ -247,31 +258,42 @@ export class CreateReportPage extends React.Component<Props, State> {
                                 >
                                     Deselect all
                                 </button>
+                                <button onClick={this.selectAllCurrencyTabs}>
+                                    Select Currency tabs
+                                </button>
                             </div>
                         </div>
-                        Analyze {selectedTabs.length} of {tabs.length} tabs{' '}
-                        {selectedTabs.length > 0 && (
-                            <span>
-                                (will take approximately {timeToGetInfo}{' '}
-                                {pluralize(timeToGetInfo, 'second', 'seconds')})
-                            </span>
-                        )}
-                        :
-                        {tabs.map(tab => (
-                            <div
-                                key={tab.id}
-                                style={{
-                                    backgroundColor: tab.color,
-                                    color: tab.textColor,
-                                    padding: '0 8px'
-                                }}
-                                onClick={() => this.selectTab(tab)}
-                            >
-                                {tab.isSelected ? '+ ' : ''}
-                                {tab.n}
-                            </div>
-                        ))}
-                    </div>
+                        <div>
+                            Analyze {selectedTabs.length} of {tabs.length} tabs{' '}
+                            {selectedTabs.length > 0 && (
+                                <span>
+                                    (will take approximately {timeToGetInfo}{' '}
+                                    {pluralize(
+                                        timeToGetInfo,
+                                        'second',
+                                        'seconds'
+                                    )})
+                                </span>
+                            )}
+                            :
+                        </div>
+                        <div className="create-report__tabs-list">
+                            {tabs.map(tab => (
+                                <div
+                                    key={tab.id}
+                                    className="create-report__tab"
+                                    style={{
+                                        backgroundColor: tab.color,
+                                        color: tab.textColor
+                                    }}
+                                    onClick={() => this.selectTab(tab)}
+                                >
+                                    {tab.isSelected ? '+ ' : ''}
+                                    {tab.n}
+                                </div>
+                            ))}
+                        </div>
+                    </React.Fragment>
                 )}
             </div>
         );

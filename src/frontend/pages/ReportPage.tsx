@@ -22,6 +22,8 @@ interface State {
 
 @observer
 export class ReportPage extends React.Component<Props, State> {
+    checkoutListNode: HTMLDivElement;
+
     constructor(props: Props) {
         super(props);
 
@@ -40,6 +42,7 @@ export class ReportPage extends React.Component<Props, State> {
 
     componentDidMount() {
         this.checkIfLeagueIsActive();
+        this.scrollCheckoutListNode();
     }
 
     componentDidUpdate(prevProps: Props, prevState: State) {
@@ -49,10 +52,15 @@ export class ReportPage extends React.Component<Props, State> {
             const report = Store.activeReport;
             const checkouts = report && report.checkouts;
 
-            this.setState({
-                selectedCheckoutId: checkouts && _.last(checkouts).id,
-                isActiveLeague: false
-            });
+            this.setState(
+                {
+                    selectedCheckoutId: checkouts && _.last(checkouts).id,
+                    isActiveLeague: false
+                },
+                () => {
+                    this.scrollCheckoutListNode();
+                }
+            );
             this.checkIfLeagueIsActive();
         }
     }
@@ -75,6 +83,12 @@ export class ReportPage extends React.Component<Props, State> {
         });
     };
 
+    scrollCheckoutListNode = () => {
+        if (this.checkoutListNode) {
+            this.checkoutListNode.scrollLeft = this.checkoutListNode.scrollWidth;
+        }
+    };
+
     updateReport = () => {
         const { activeReport } = Store;
 
@@ -95,6 +109,9 @@ export class ReportPage extends React.Component<Props, State> {
 
             Store.updateReport(newReport);
             Store.setActiveReport(newReport.id);
+
+            this.selectCheckout(checkout.id);
+            this.scrollCheckoutListNode();
         });
     };
 
@@ -122,6 +139,17 @@ export class ReportPage extends React.Component<Props, State> {
         Store.setActiveReport(newReport.id);
     };
 
+    handleCheckoutListScroll = (e: React.WheelEvent<HTMLDivElement>) => {
+        const delta = e.deltaY > 0 ? 1 : -1;
+        const currentScroll = this.checkoutListNode.scrollLeft;
+        const scrollWidth = Math.max(
+            this.checkoutListNode.scrollWidth / 100 * 5,
+            50
+        );
+
+        this.checkoutListNode.scrollLeft = currentScroll + scrollWidth * delta;
+    };
+
     render() {
         const { selectedCheckoutId, isActiveLeague } = this.state;
         const { match } = this.props;
@@ -141,7 +169,7 @@ export class ReportPage extends React.Component<Props, State> {
 
         return (
             <div className="report">
-                <h3>
+                <h2 className="report__title">
                     Report {report.name}
                     <DeleteButton onClick={this.deleteReport}>
                         Delete
@@ -149,48 +177,49 @@ export class ReportPage extends React.Component<Props, State> {
                     {isActiveLeague && (
                         <button onClick={this.updateReport}>Update</button>
                     )}
-                </h3>
+                </h2>
                 Created {humanizeDate(report.createdAt)}
                 <br />
                 Updated {humanizeDate(report.updatedAt)}
                 {report.checkouts.length > 0 && (
                     <div className="checkouts__container">
                         <div className="checkouts__title">Checkouts</div>
-                        <div className="checkouts__container">
-                            <div className="checkouts__list">
-                                {report.checkouts.map((checkout, index) => (
-                                    <React.Fragment key={checkout.id}>
-                                        <div
-                                            className={classnames(
-                                                'checkouts__list-item',
-                                                {
-                                                    'checkouts__list-item_active':
-                                                        selectedCheckout &&
-                                                        checkout.id ===
-                                                            selectedCheckout.id
-                                                }
-                                            )}
-                                            onClick={() =>
-                                                this.selectCheckout(checkout.id)
+                        <div
+                            className="checkouts__list"
+                            onWheel={e => this.handleCheckoutListScroll(e)}
+                            ref={node => (this.checkoutListNode = node)}
+                        >
+                            {report.checkouts.map((checkout, index) => (
+                                <React.Fragment key={checkout.id}>
+                                    <div
+                                        className={classnames(
+                                            'checkouts__list-item',
+                                            {
+                                                'checkouts__list-item_active':
+                                                    selectedCheckout &&
+                                                    checkout.id ===
+                                                        selectedCheckout.id
                                             }
-                                        >
-                                            <b>Checkout {index}</b>
-                                            <br />
-                                            {humanizeDate(checkout.createdAt)}
-                                            <br />
-                                            <Value
-                                                value={getTotalItemsValue(
-                                                    checkout.items
-                                                )}
-                                            />
-                                        </div>
-                                        {index !==
-                                            report.checkouts.length - 1 && (
-                                            <div className="checkouts__list-item-separator" />
                                         )}
-                                    </React.Fragment>
-                                ))}
-                            </div>
+                                        onClick={() =>
+                                            this.selectCheckout(checkout.id)
+                                        }
+                                    >
+                                        <b>Checkout {index}</b>
+                                        <br />
+                                        {humanizeDate(checkout.createdAt)}
+                                        <br />
+                                        <Value
+                                            value={getTotalItemsValue(
+                                                checkout.items
+                                            )}
+                                        />
+                                    </div>
+                                    {index !== report.checkouts.length - 1 && (
+                                        <div className="checkouts__list-item-separator" />
+                                    )}
+                                </React.Fragment>
+                            ))}
                         </div>
                     </div>
                 )}

@@ -61,13 +61,23 @@ export interface TabApi {
     n: string;
     i: number;
     id: string;
-    type: string;
+    type: TabType;
     hidden: boolean;
     selected: boolean;
     colour: Colour;
     srcL: string;
     srcC: string;
     srcR: string;
+}
+
+export enum TabType {
+    Currency = 'CurrencyStash',
+    DivinationCard = 'DivinationCardStash',
+    Essence = 'EssenceStash',
+    Map = 'MapStash',
+    Normal = 'NormalStash',
+    Premium = 'PremiumStash',
+    Quad = 'QuadStash'
 }
 
 export interface Tab

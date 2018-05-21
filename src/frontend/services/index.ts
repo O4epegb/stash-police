@@ -206,39 +206,37 @@ export function createCheckout({
             })
         );
 
-        const currencyByName: m.CheckoutItems = {};
+        const currencyByName = currency.reduce(
+            (acc, item) => {
+                const { typeLine: currencyName, stackSize } = item;
 
-        currency.forEach(item => {
-            const { typeLine: currencyName, stackSize } = item;
-
-            if (!currencyByName[currencyName]) {
-                currencyByName[currencyName] = {
+                const currencyObject = acc[currencyName] || {
                     stackSize: 0,
                     cost: 0,
                     name: currencyName,
                     originalItem: item
                 };
-            }
 
-            const newStackSize =
-                currencyByName[currencyName].stackSize + stackSize;
-            const chaosEquivalent =
-                currencyName === ItemNames.ChaosOrb
-                    ? 1
-                    : currencyOverview[currencyName].chaosEquivalent;
+                const newStackSize = currencyObject.stackSize + stackSize;
+                const chaosEquivalent =
+                    currencyName === ItemNames.ChaosOrb
+                        ? 1
+                        : currencyOverview[currencyName].chaosEquivalent;
 
-            currencyByName[currencyName] = {
-                ...currencyByName[currencyName],
-                stackSize: newStackSize,
-                cost: newStackSize * chaosEquivalent
-            };
-        });
+                acc[currencyName] = {
+                    ...currencyObject,
+                    stackSize: newStackSize,
+                    cost: newStackSize * chaosEquivalent
+                };
 
-        const dateString = new Date().toISOString();
+                return acc;
+            },
+            {} as m.CheckoutItems
+        );
 
         const checkout: m.Checkout = {
             id: uuid(),
-            createdAt: dateString,
+            createdAt: new Date().toISOString(),
             items: currencyByName,
             tabs: tabsUsed
         };
