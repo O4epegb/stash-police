@@ -205,7 +205,7 @@ export class ReportPage extends React.Component<Props, State> {
                                             this.selectCheckout(checkout.id)
                                         }
                                     >
-                                        <b>Checkout {index}</b>
+                                        <b>Checkout {index + 1}</b>
                                         <br />
                                         {humanizeDate(checkout.createdAt)}
                                         <br />
@@ -226,7 +226,8 @@ export class ReportPage extends React.Component<Props, State> {
                 {selectedCheckout && (
                     <div className="report-items">
                         <div className="report-items__title">
-                            Checkout {selectedCheckoutIndex}
+                            Checkout {selectedCheckoutIndex + 1},{' '}
+                            {humanizeDate(selectedCheckout.createdAt)}
                             {report.checkouts.length > 1 && (
                                 <DeleteButton onClick={this.deleteCheckout}>
                                     Delete

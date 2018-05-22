@@ -14,6 +14,9 @@
     --blue: #0cabe5;
     --primary: var(--red);
     --secondary: var(--blue);
+    --aaa: #F29766;
+    --bbb: #C78626;
+    --ccc: #5DB0D7;
     /* --primary: var(--blue);
     --secondary: var(--red); */
   }
@@ -30,12 +33,14 @@
     &-track {
         background: #222222;
     }
-
+    
     &-thumb {
-        background: #DCD3C3;
+        /* background: #DCD3C3; */
+        background: #333333;
+        border: 1px solid #5C5C5C;
 
         &:hover {
-            background: #888888;
+            /* background: #888888; */
         }
     }
 }
@@ -292,6 +297,7 @@ button {
     height: 100%;
 
     &__title {
+        margin-top: 10px;
         margin-bottom: 20px;
     }
 
@@ -302,7 +308,6 @@ button {
 
     &__item {
         padding: 10px;
-        border-radius: 4px;
         background-color: var(--mainBg);
         border: 1px solid var(--mainBorder);
 
