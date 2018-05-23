@@ -12,13 +12,16 @@
     --buttonText: #ffffff;
     --red: #c53b12;
     --blue: #0cabe5;
-    --primary: var(--red);
+    /* --primary: var(--red); */
+    --primary: #C78626;
     --secondary: var(--blue);
     --aaa: #F29766;
     --bbb: #C78626;
     --ccc: #5DB0D7;
-    /* --primary: var(--blue);
-    --secondary: var(--red); */
+    --ddd: #DC739C;
+    --eee: #00A6C2;
+    /* --primary: var(--blue); */
+    /* --secondary: var(--red); */
   }
 
 * {
@@ -87,7 +90,7 @@ h1 {
 }
 
 h2 {
-    font-size: 25px;
+    font-size: 26px;
 }
 
 h3 {
@@ -96,16 +99,15 @@ h3 {
 
 button {
     padding: 4px 8px;
-    border: 2px solid var(--buttonBorder);
-    border: 2px solid #989999;
-    border-radius: 4px;
+    border: none;
     color: var(--buttonText);
-    background-color: transparent;
+    background-color: #00A6C2;
     cursor: pointer;
 
     &[disabled] {
-        color: #989999;
-        cursor: default;
+        background-color: #B6A999;
+        color: #353535;
+        cursor: not-allowed;
     }
 
     &:focus {
@@ -285,7 +287,7 @@ button {
 
             &_active,
             &:hover {
-                box-shadow: inset 0px -4px 0 0px #a52727;
+                box-shadow: inset 0px -4px 0 0px var(--primary);
             }
         }
     }
@@ -366,11 +368,11 @@ button {
         flex: 0 0 auto;
         padding: 10px;
         background-color: var(--mainBg);
-        border: 2px solid var(--mainBg);
+        box-shadow: inset 0 0 0 1px var(--primary);
         z-index: 1;
 
         &_active {
-            border-color: var(--primary);
+            box-shadow: inset 0 0 0 3px var(--primary);
         }
     }
 
@@ -388,8 +390,33 @@ button {
     flex-direction: column;
     align-items: stretch;
 
-    &__title {
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
         margin-bottom: 20px;
+    }
+
+    &__title {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: #ffffff;
+
+        &-prefix {
+            color: var(--textColor);
+        }
+    }
+
+    &__controls {
+        display: flex;
+        align-items: stretch;
+
+        &-button {
+            & + & {
+                margin-left: 10px;
+            }
+        }
     }
 
     &__item {
@@ -414,23 +441,41 @@ button {
 }
 
 .report-items {
+    position: relative;
     display: flex;
     flex-direction: column;
     flex: 1;
     overflow-y: auto;
+
+    &__header {
+
+    }
+
+    &__title {
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        min-height: 30px;
+    }
 }
 
 .delete-button {
+    position: relative;
     width: 100px;
+    min-height: 20px;
     padding: 0;
     overflow: hidden;
     background-color: transparent;
     transition: background-color 0.2s;
 
     &__wrapper {
-        position: relative;
-        height: 20px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         white-space: nowrap;
+        border: 2px solid #7d7d7d;
     }
 
     &__text {

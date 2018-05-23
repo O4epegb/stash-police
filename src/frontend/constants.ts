@@ -6,6 +6,12 @@ export const isDevelopment = !isProduction;
 
 export const poeCookieName = 'POESESSID';
 
+export enum Time {
+    Second = 1000,
+    Minute = 1000 * 60,
+    Hour = 1000 * 60 * 60
+}
+
 export enum Routes {
     Startup = '/',
     Main = '/main',

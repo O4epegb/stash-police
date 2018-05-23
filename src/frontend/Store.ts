@@ -1,10 +1,17 @@
 import { observable, action, computed } from 'mobx';
 
 // import { ProcessedTabsData } from './services';
+import { Time } from './constants';
 import { getReportsFromDisk, updateReportsOnDisk } from './utils';
 import { Reports, Report, UserInfo } from './models';
 
 class StoreClass {
+    constructor() {
+        setInterval(this.toogleUpdateFlag, Time.Minute);
+    }
+
+    @observable updateFlag = false;
+
     @observable
     userInfo: UserInfo = {
         accountName: '',
@@ -22,6 +29,11 @@ class StoreClass {
     get avatarUrl(): string {
         return this.userInfo.avatarUrl;
     }
+
+    @action
+    toogleUpdateFlag = () => {
+        this.updateFlag = !this.updateFlag;
+    };
 
     @action
     setReports = (reports: Reports) => {

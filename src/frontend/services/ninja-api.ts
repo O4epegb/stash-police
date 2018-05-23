@@ -13,7 +13,7 @@ function requestNinjaApi<T>(url: ApiUrls, params: NinjaApiParams) {
     return axios.get<T>(url, {
         params: {
             ...params,
-            date: params.date || formatDate(new Date(), DateFormats.NinjaDate)
+            date: params.date || formatDate(new Date(), DateFormats.PoeNinjaApi)
         }
     });
 }

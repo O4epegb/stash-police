@@ -7,11 +7,12 @@ import * as classnames from 'classnames';
 
 import * as m from '../models';
 import { getLeagues, createCheckout } from '../services';
-import { humanizeDate, getTotalItemsValue } from '../utils';
+import { getTotalItemsValue } from '../utils';
 import { Routes } from '../constants';
 import { Store } from '../Store';
 import { DeleteButton } from '../components/DeleteButton';
-import { Value } from '../components/Value';
+import { NumericValue, CurrencyValue } from '../components/Value';
+import { DateValue } from '../components/DateValue';
 
 type Props = RouteComponentProps<{ id: string }> & {};
 
@@ -89,7 +90,12 @@ export class ReportPage extends React.Component<Props, State> {
         }
     };
 
-    updateReport = () => {
+    updateReport = (newReport: m.Report) => {
+        Store.updateReport(newReport);
+        Store.setActiveReport(newReport.id);
+    };
+
+    createNewCheckout = () => {
         const { activeReport } = Store;
 
         createCheckout({
@@ -107,9 +113,7 @@ export class ReportPage extends React.Component<Props, State> {
                 checkouts: [...activeReport.checkouts, checkout]
             };
 
-            Store.updateReport(newReport);
-            Store.setActiveReport(newReport.id);
-
+            this.updateReport(newReport);
             this.selectCheckout(checkout.id);
             this.scrollCheckoutListNode();
         });
@@ -135,8 +139,7 @@ export class ReportPage extends React.Component<Props, State> {
         };
 
         this.setState({ selectedCheckoutId: null });
-        Store.updateReport(newReport);
-        Store.setActiveReport(newReport.id);
+        this.updateReport(newReport);
     };
 
     handleCheckoutListScroll = (e: React.WheelEvent<HTMLDivElement>) => {
@@ -169,21 +172,45 @@ export class ReportPage extends React.Component<Props, State> {
 
         return (
             <div className="report">
-                <h2 className="report__title">
-                    Report {report.name}
-                    <DeleteButton onClick={this.deleteReport}>
-                        Delete
-                    </DeleteButton>
-                    {isActiveLeague && (
-                        <button onClick={this.updateReport}>Update</button>
-                    )}
-                </h2>
-                Created {humanizeDate(report.createdAt)}
-                <br />
-                Updated {humanizeDate(report.updatedAt)}
+                <div className="report__header">
+                    <h2 className="report__title">
+                        <span className="report__title-prefix">Report:</span>{' '}
+                        <span
+                            className="report__title-name"
+                            title={report.name}
+                        >
+                            {report.name}
+                        </span>
+                    </h2>
+                    <div className="report__controls">
+                        <button
+                            className="report__controls-button"
+                            disabled={!isActiveLeague}
+                            title={
+                                !isActiveLeague ? 'League is not active' : ''
+                            }
+                            onClick={this.createNewCheckout}
+                        >
+                            Update
+                        </button>
+                        <DeleteButton
+                            className="report__controls-button"
+                            onClick={this.deleteReport}
+                        >
+                            Delete
+                        </DeleteButton>
+                    </div>
+                </div>
+                <div>{report.league.id} League</div>
+                <div>
+                    Created <DateValue>{report.createdAt}</DateValue>
+                </div>
+                <div>
+                    Updated <DateValue>{report.updatedAt}</DateValue>
+                </div>
                 {report.checkouts.length > 0 && (
                     <div className="checkouts__container">
-                        <div className="checkouts__title">Checkouts</div>
+                        {/* <div className="checkouts__title">Checkouts</div> */}
                         <div
                             className="checkouts__list"
                             onWheel={e => this.handleCheckoutListScroll(e)}
@@ -207,9 +234,11 @@ export class ReportPage extends React.Component<Props, State> {
                                     >
                                         <b>Checkout {index + 1}</b>
                                         <br />
-                                        {humanizeDate(checkout.createdAt)}
+                                        <DateValue>
+                                            {checkout.createdAt}
+                                        </DateValue>
                                         <br />
-                                        <Value
+                                        <CurrencyValue
                                             value={getTotalItemsValue(
                                                 checkout.items
                                             )}
@@ -225,16 +254,22 @@ export class ReportPage extends React.Component<Props, State> {
                 )}
                 {selectedCheckout && (
                     <div className="report-items">
-                        <div className="report-items__title">
-                            Checkout {selectedCheckoutIndex + 1},{' '}
-                            {humanizeDate(selectedCheckout.createdAt)}
-                            {report.checkouts.length > 1 && (
-                                <DeleteButton onClick={this.deleteCheckout}>
-                                    Delete
-                                </DeleteButton>
-                            )}
+                        <div className="report-items__header">
+                            <div className="report-items__title">
+                                <div>
+                                    Checkout {selectedCheckoutIndex + 1},{' '}
+                                    <DateValue>
+                                        {selectedCheckout.createdAt}
+                                    </DateValue>
+                                </div>
+                                {report.checkouts.length > 1 && (
+                                    <DeleteButton onClick={this.deleteCheckout}>
+                                        Delete
+                                    </DeleteButton>
+                                )}
+                            </div>
                             <div>
-                                <Value
+                                <NumericValue
                                     value={getTotalItemsValue(
                                         selectedCheckout.items
                                     )}
@@ -271,13 +306,17 @@ export class ReportPage extends React.Component<Props, State> {
                                     Header: 'Cost',
                                     className: 'report__item-cell',
                                     accessor: 'cost',
-                                    Cell: row => <Value value={row.value} />
+                                    Cell: row => (
+                                        <CurrencyValue value={row.value} />
+                                    )
                                 },
                                 {
                                     Header: 'Stack size',
                                     className: 'report__item-cell',
                                     accessor: 'stackSize',
-                                    Cell: row => <Value value={row.value} />
+                                    Cell: row => (
+                                        <NumericValue value={row.value} />
+                                    )
                                 }
                             ]}
                             showPagination={false}

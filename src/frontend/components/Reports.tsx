@@ -5,12 +5,12 @@ import * as _ from 'lodash';
 import posed, { PoseGroup } from 'react-pose';
 import { tween } from 'popmotion';
 
-import { humanizeDate, getTotalItemsValue } from '../utils';
+import { getTotalItemsValue } from '../utils';
 import { Routes } from '../constants';
 import { Report } from '../models';
 import { Store } from '../Store';
-// import { DeleteButton } from './DeleteButton';
-import { Value } from './Value';
+import { NumericValue, CurrencyValue } from './Value';
+import { DateValue } from '../components/DateValue';
 
 const ReportsItem = posed.div({
     enter: {
@@ -70,29 +70,35 @@ export class Reports extends React.Component<Props, {}> {
                                 >
                                     {report.name}
                                 </Link>
-                                <br />
-                                {report.league.id}
-                                <br />
-                                Created {humanizeDate(report.createdAt)}
-                                <br />
-                                Updated {humanizeDate(report.updatedAt)}
-                                <br />
-                                Total value:{' '}
-                                <Value
-                                    value={getTotalItemsValue(
-                                        _.last(report.checkouts).items
-                                    )}
-                                />
-                                <br />
-                                Checkouts: {report.checkouts.length}
-                                <br />
-                                Tabs: {report.lastProccessedTabs.length}
-                                <br />
-                                {/* <DeleteButton
-                                    onClick={() => this.deleteReport(report)}
-                                >
-                                    Delete
-                                </DeleteButton> */}
+                                <div>{report.league.id}</div>
+                                <div>
+                                    Created{' '}
+                                    <DateValue>{report.createdAt}</DateValue>
+                                </div>
+                                <div>
+                                    Updated{' '}
+                                    <DateValue>{report.updatedAt}</DateValue>
+                                </div>
+                                <div>
+                                    Total value:{' '}
+                                    <CurrencyValue
+                                        value={getTotalItemsValue(
+                                            _.last(report.checkouts).items
+                                        )}
+                                    />
+                                </div>
+                                <div>
+                                    Checkouts:{' '}
+                                    <NumericValue
+                                        value={report.checkouts.length}
+                                    />
+                                </div>
+                                <div>
+                                    Tabs:{' '}
+                                    <NumericValue
+                                        value={report.lastProccessedTabs.length}
+                                    />
+                                </div>
                             </ReportsItem>
                         ))}
                     </PoseGroup>

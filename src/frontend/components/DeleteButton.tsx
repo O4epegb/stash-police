@@ -1,5 +1,6 @@
 import * as React from 'react';
 import posed from 'react-pose';
+import * as classnames from 'classnames';
 
 import { Colors } from '../constants';
 
@@ -23,14 +24,17 @@ const ConfirmationText = posed.div({
 
 const Wrapper = posed.div({
     noClick: {
+        borderWidth: '2px',
         backgroundColor: 'rgba(0, 0, 0, 0)'
     },
     clickedOnce: {
+        borderWidth: '0px',
         backgroundColor: Colors.red
     }
 });
 
 interface Props {
+    className?: string;
     initialText?: string;
     confirmationText?: string;
     onClick: () => any;
@@ -76,12 +80,12 @@ export class DeleteButton extends React.Component<Props, State> {
     };
 
     render() {
-        const { initialText, confirmationText } = this.props;
+        const { initialText, confirmationText, className } = this.props;
         const { isClickedOnce } = this.state;
 
         return (
             <button
-                className="delete-button"
+                className={classnames('delete-button', className)}
                 onClick={this.onClick}
                 onMouseLeave={this.onMouseLeave}
                 onMouseEnter={this.onMouseEnter}

@@ -33,9 +33,9 @@ export class DevMenu extends React.Component<{}, State> {
             <div className="dev-menu" onClick={this.toggleMenu}>
                 {isOpened ? (
                     <div>
-                        <button onClick={this.openConfigFolder}>
+                        <div onClick={this.openConfigFolder}>
                             Open config folder
-                        </button>
+                        </div>
                     </div>
                 ) : (
                     <div>Dev menu</div>
