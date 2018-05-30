@@ -161,7 +161,7 @@ export class CreateReportPage extends React.Component<Props, State> {
         const showWarning = selectedTabs && selectedTabs.length === 0;
         const timeToGetInfo =
             selectedTabs &&
-            Math.ceil(getStashItemsDelay * selectedTabs.length / 1000);
+            Math.ceil((getStashItemsDelay * selectedTabs.length) / 1000);
         const leaguesToShow = selectedLeague
             ? leagues.filter(l => l.id === selectedLeague.id)
             : leagues;
@@ -171,7 +171,7 @@ export class CreateReportPage extends React.Component<Props, State> {
                 {isCreatingReport && (
                     <div className="create-report__loader">Creating report</div>
                 )}
-                <h1>Create Report</h1>
+                <h2>Create Report</h2>
                 <div>
                     <div>Report name</div>
                     <input
@@ -184,15 +184,7 @@ export class CreateReportPage extends React.Component<Props, State> {
                 {isFetchingLeagues && <div>Loading leagues</div>}
                 {leagues && (
                     <div className="league-list">
-                        {selectedLeague ? (
-                            'League:'
-                        ) : (
-                            <div>
-                                Select league (<small>
-                                    SSF leagues are excluded for now
-                                </small>):
-                            </div>
-                        )}
+                        {selectedLeague ? 'League:' : <div>Select league:</div>}
                         <div>
                             <PoseGroup>
                                 {leaguesToShow.map(league => {

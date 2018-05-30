@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import posed, { PoseGroup } from 'react-pose';
 import { tween } from 'popmotion';
 
-import { getTotalItemsValue } from '../utils';
+import { getTotalItemsValue, pluralize } from '../utils';
 import { Routes } from '../constants';
 import { Report } from '../models';
 import { Store } from '../Store';
@@ -65,11 +65,16 @@ export class Reports extends React.Component<Props, {}> {
                                 key={report.id}
                                 className="reports__item"
                             >
-                                <Link
-                                    to={Routes.Report.replace(':id', report.id)}
-                                >
-                                    {report.name}
-                                </Link>
+                                <h3>
+                                    <Link
+                                        to={Routes.Report.replace(
+                                            ':id',
+                                            report.id
+                                        )}
+                                    >
+                                        {report.name}
+                                    </Link>
+                                </h3>
                                 <div>{report.league.id}</div>
                                 <div>
                                     Created{' '}
@@ -80,24 +85,33 @@ export class Reports extends React.Component<Props, {}> {
                                     <DateValue>{report.updatedAt}</DateValue>
                                 </div>
                                 <div>
-                                    Total value:{' '}
                                     <CurrencyValue
                                         value={getTotalItemsValue(
                                             _.last(report.checkouts).items
                                         )}
-                                    />
-                                </div>
-                                <div>
-                                    Checkouts:{' '}
-                                    <NumericValue
-                                        value={report.checkouts.length}
-                                    />
-                                </div>
-                                <div>
-                                    Tabs:{' '}
-                                    <NumericValue
-                                        value={report.lastProccessedTabs.length}
-                                    />
+                                    />,{' '}
+                                    <span>
+                                        <NumericValue
+                                            value={report.checkouts.length}
+                                        />{' '}
+                                        {pluralize(
+                                            report.checkouts.length,
+                                            'checkout',
+                                            'checkouts'
+                                        )}
+                                    </span>,{' '}
+                                    <span>
+                                        <NumericValue
+                                            value={
+                                                report.lastProccessedTabs.length
+                                            }
+                                        />{' '}
+                                        {pluralize(
+                                            report.lastProccessedTabs.length,
+                                            'tab',
+                                            'tabs'
+                                        )}
+                                    </span>
                                 </div>
                             </ReportsItem>
                         ))}

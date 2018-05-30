@@ -1,3 +1,5 @@
+import * as url from 'url';
+import { remote } from 'electron';
 import * as uuidv4 from 'uuid/v4';
 import * as _ from 'lodash';
 import * as format from 'date-fns/format';
@@ -5,6 +7,8 @@ import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 
 import { Tab, CheckoutItems } from '../models';
 import { prefixes, suffixes } from '../data';
+import { ApiUrls, poeCookieName } from '../constants';
+import { updateSettings } from './disk-utils';
 
 export * from './disk-utils';
 
@@ -53,4 +57,53 @@ export function generateAffixedName(name: string): string {
     const suffix = suffixes[_.random(suffixes.length - 1)];
 
     return `${prefix} ${name} ${suffix}`;
+}
+
+export function setSessionIdCookie(sessionId: string) {
+    return new Promise((resolve, reject) => {
+        const cookie = {
+            url: ApiUrls.index,
+            name: poeCookieName,
+            value: sessionId,
+            domain: url.parse(ApiUrls.index).host
+        };
+
+        if (remote.session.defaultSession) {
+            remote.session.defaultSession.cookies.set(cookie, error => {
+                if (error) {
+                    console.error(error);
+                    return reject();
+                }
+
+                updateSettings({ sessionId });
+
+                return resolve();
+            });
+        } else {
+            return reject();
+        }
+    });
+}
+
+export function removeSessionIdCookie() {
+    return new Promise((resolve, reject) => {
+        if (remote.session.defaultSession) {
+            remote.session.defaultSession.cookies.remove(
+                ApiUrls.index,
+                poeCookieName,
+                (error: any) => {
+                    if (error) {
+                        console.error(error);
+                        return reject();
+                    }
+
+                    updateSettings({ sessionId: '' });
+
+                    return resolve();
+                }
+            );
+        } else {
+            return reject();
+        }
+    });
 }

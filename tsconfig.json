@@ -6,6 +6,5 @@
         "experimentalDecorators": true,
         "noUnusedLocals": true,
         "lib": ["dom", "es2015"]
-    },
-    "compileOnSave": false
+    }
 }

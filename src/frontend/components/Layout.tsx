@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import posed, { PoseGroup } from 'react-pose';
 import { tween } from 'popmotion';
@@ -34,7 +34,7 @@ const Header = posed.header({
     }
 });
 
-const Main = posed.main();
+const Main = posed.div();
 
 interface Props {
     leftColumn(): React.ReactElement<any>;
@@ -69,12 +69,13 @@ export class Layout extends React.Component<Props> {
                             </div>
                         </div>
                         <div className="header__menu">
-                            <Link
+                            <NavLink
+                                activeClassName="header__menu-item_active"
                                 className="header__menu-item"
                                 to={Routes.ReportsCreate}
                             >
                                 Create new Report
-                            </Link>
+                            </NavLink>
                             {!isProduction && <DevMenu />}
                         </div>
                     </Header>

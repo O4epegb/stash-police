@@ -146,7 +146,7 @@ export class ReportPage extends React.Component<Props, State> {
         const delta = e.deltaY > 0 ? 1 : -1;
         const currentScroll = this.checkoutListNode.scrollLeft;
         const scrollWidth = Math.max(
-            this.checkoutListNode.scrollWidth / 100 * 5,
+            (this.checkoutListNode.scrollWidth / 100) * 5,
             50
         );
 
@@ -169,6 +169,8 @@ export class ReportPage extends React.Component<Props, State> {
         const selectedCheckoutIndex = report.checkouts.indexOf(
             selectedCheckout
         );
+        const itemsLength =
+            selectedCheckout && Object.keys(selectedCheckout.items).length;
 
         return (
             <div className="report">
@@ -256,11 +258,13 @@ export class ReportPage extends React.Component<Props, State> {
                     <div className="report-items">
                         <div className="report-items__header">
                             <div className="report-items__title">
-                                <div>
-                                    Checkout {selectedCheckoutIndex + 1},{' '}
-                                    <DateValue>
-                                        {selectedCheckout.createdAt}
-                                    </DateValue>
+                                <div className="report-items__title-text">
+                                    <div>
+                                        Checkout {selectedCheckoutIndex + 1},{' '}
+                                        <DateValue>
+                                            {selectedCheckout.createdAt}
+                                        </DateValue>
+                                    </div>
                                 </div>
                                 {report.checkouts.length > 1 && (
                                     <DeleteButton onClick={this.deleteCheckout}>
@@ -269,71 +273,72 @@ export class ReportPage extends React.Component<Props, State> {
                                 )}
                             </div>
                             <div>
-                                <NumericValue
+                                <CurrencyValue
                                     value={getTotalItemsValue(
                                         selectedCheckout.items
                                     )}
                                 />
                             </div>
-                            <div>
-                                {Object.keys(selectedCheckout.items).length}{' '}
-                                items:
-                            </div>
+                            <div>{itemsLength} items</div>
                         </div>
-                        <ReactTable
-                            data={_.map(selectedCheckout.items, item => item)}
-                            columns={[
-                                {
-                                    Header: 'Item',
-                                    accessor: 'name',
-                                    Cell: ({ original: item }) => (
-                                        <div className="report__item-cell">
-                                            <img
-                                                className="report__item-image"
-                                                src={item.originalItem.icon.replace(
-                                                    /\?.+/,
-                                                    ''
-                                                )}
-                                                alt={item.name}
-                                            />
-                                            <div className="report__item-name">
-                                                {item.name}
+                        {itemsLength > 0 && (
+                            <ReactTable
+                                data={_.map(
+                                    selectedCheckout.items,
+                                    item => item
+                                )}
+                                columns={[
+                                    {
+                                        Header: 'Item',
+                                        accessor: 'name',
+                                        Cell: ({ original: item }) => (
+                                            <div className="report__item-cell">
+                                                <img
+                                                    className="report__item-image"
+                                                    src={item.originalItem.icon.replace(
+                                                        /\?.+/,
+                                                        ''
+                                                    )}
+                                                    alt={item.name}
+                                                />
+                                                <div className="report__item-name">
+                                                    {item.name}
+                                                </div>
                                             </div>
-                                        </div>
-                                    )
-                                },
-                                {
-                                    Header: 'Cost',
-                                    className: 'report__item-cell',
-                                    accessor: 'cost',
-                                    Cell: row => (
-                                        <CurrencyValue value={row.value} />
-                                    )
-                                },
-                                {
-                                    Header: 'Stack size',
-                                    className: 'report__item-cell',
-                                    accessor: 'stackSize',
-                                    Cell: row => (
-                                        <NumericValue value={row.value} />
-                                    )
-                                }
-                            ]}
-                            showPagination={false}
-                            defaultPageSize={
-                                Object.keys(selectedCheckout.items).length
-                            }
-                            defaultSorted={[
-                                {
-                                    id: 'cost',
-                                    desc: true
-                                }
-                            ]}
-                            style={{
-                                flex: '1'
-                            }}
-                            className="-striped -highlight"
-                        />
+                                        )
+                                    },
+                                    {
+                                        Header: 'Cost',
+                                        className: 'report__item-cell',
+                                        accessor: 'cost',
+                                        Cell: row => (
+                                            <CurrencyValue value={row.value} />
+                                        )
+                                    },
+                                    {
+                                        Header: 'Stack size',
+                                        className: 'report__item-cell',
+                                        accessor: 'stackSize',
+                                        Cell: row => (
+                                            <NumericValue value={row.value} />
+                                        )
+                                    }
+                                ]}
+                                showPagination={false}
+                                defaultPageSize={itemsLength}
+                                pageSize={itemsLength}
+                                defaultSorted={[
+                                    {
+                                        id: 'cost',
+                                        desc: true
+                                    }
+                                ]}
+                                style={{
+                                    flex: '1'
+                                }}
+                                className="-striped -highlight"
+                            />
+                        )}
                     </div>
                 )}
             </div>

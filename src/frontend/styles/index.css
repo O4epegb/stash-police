@@ -282,8 +282,8 @@ button {
             align-items: center;
             justify-content: center;
             padding: 0px 10px;
-            transition: box-shadow 0.2s;
             cursor: pointer;
+            transition: box-shadow 0.2s;
 
             &_active,
             &:hover {
@@ -456,6 +456,11 @@ button {
         justify-content: space-between;
         align-items: stretch;
         min-height: 30px;
+
+        &-text {
+            display: flex;
+            align-items: center;
+        }
     }
 }
 

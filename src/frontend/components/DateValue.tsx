@@ -15,9 +15,12 @@ export class DateValue extends React.Component<Props> {
         const { children, format } = this.props;
 
         return (
-            <React.Fragment key={String(Store.updateFlag)}>
+            <span
+                key={String(Store.updateFlag)}
+                title={formatDate(children, DateFormats.DefaultWithTime)}
+            >
                 {format ? formatDate(children, format) : humanizeDate(children)}
-            </React.Fragment>
+            </span>
         );
     }
 }

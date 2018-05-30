@@ -1,63 +1,7 @@
 import * as fs from 'fs-extra';
-import * as url from 'url';
-import { remote } from 'electron';
 
-import {
-    settingsPath,
-    reportsPath,
-    ApiUrls,
-    poeCookieName
-} from '../constants';
+import { settingsPath, reportsPath } from '../constants';
 import { Reports, Settings, ReportsFile } from '../models';
-
-export function setSessionIdCookie(sessionId: string) {
-    return new Promise((resolve, reject) => {
-        const cookie = {
-            url: ApiUrls.index,
-            name: poeCookieName,
-            value: sessionId,
-            domain: url.parse(ApiUrls.index).host
-        };
-
-        if (remote.session.defaultSession) {
-            remote.session.defaultSession.cookies.set(cookie, error => {
-                if (error) {
-                    console.error(error);
-                    return reject();
-                }
-
-                updateSettings({ sessionId });
-
-                return resolve();
-            });
-        } else {
-            return reject();
-        }
-    });
-}
-
-export function removeSessionIdCookie() {
-    return new Promise((resolve, reject) => {
-        if (remote.session.defaultSession) {
-            remote.session.defaultSession.cookies.remove(
-                ApiUrls.index,
-                poeCookieName,
-                (error: any) => {
-                    if (error) {
-                        console.error(error);
-                        return reject();
-                    }
-
-                    updateSettings({ sessionId: '' });
-
-                    return resolve();
-                }
-            );
-        } else {
-            return reject();
-        }
-    });
-}
 
 export function getSettings(): Settings {
     if (!fs.pathExistsSync(settingsPath)) {
@@ -88,7 +32,7 @@ function ensureReportsFileExists() {
     }
 }
 
-export function getReportsFromDisk(accountName: string): Reports | null {
+export function getReportsFromDisk(accountName: string): Reports {
     ensureReportsFileExists();
 
     return fs.readJsonSync(reportsPath).reportsByUser[accountName] || [];
