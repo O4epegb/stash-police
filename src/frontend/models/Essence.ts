@@ -1,10 +1,14 @@
-import { Sparkline, ExplicitModifiersItem } from './common';
+import {
+    Sparkline,
+    ExplicitModifiersItem,
+    NinjaOverviewItemTypes
+} from './common';
 
-export interface EssenceOverview {
-    lines: EssenceItem[];
+export interface EssenceOverviewApi {
+    lines: EssenceItemApi[];
 }
 
-export interface EssenceItem {
+export interface EssenceItemApi {
     id: number;
     name: string;
     icon: string;
@@ -28,4 +32,8 @@ export interface EssenceItem {
     chaosValue: number;
     exaltedValue: number;
     count: number;
+}
+
+export interface EssenceItem extends EssenceItemApi {
+    type: NinjaOverviewItemTypes.Essence;
 }

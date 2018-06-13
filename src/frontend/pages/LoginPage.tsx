@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { GearLoader } from '../components/GearLoader';
 import { setSessionIdCookie } from '../utils';
 import { getAccountInfo } from '../services';
 import { UserInfo } from '../models';
@@ -10,6 +11,7 @@ interface LoginProps {
 
 interface LoginState {
     sessionId: string;
+    errorText: string;
     isLoading: boolean;
 }
 
@@ -19,6 +21,7 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
 
         this.state = {
             sessionId: '',
+            errorText: '',
             isLoading: false
         };
     }
@@ -28,10 +31,14 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
         const { onLoginSuccess } = this.props;
 
         if (!sessionId) {
+            this.setState({
+                errorText: 'Please, enter SessionId'
+            });
             return;
         }
 
         this.setState({
+            errorText: '',
             isLoading: true
         });
 
@@ -42,6 +49,8 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
             })
             .catch(error => {
                 this.setState({
+                    errorText:
+                        'Something went wrong. Probably your SessionId is incorrect',
                     isLoading: false
                 });
                 console.log(`login screen: login error ${error}`);
@@ -55,23 +64,33 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
     };
 
     render() {
-        const { isLoading } = this.state;
+        const { isLoading, errorText } = this.state;
 
         return (
             <div className="login">
                 <div className="login__wrapper">
                     {isLoading ? (
-                        <div className="login__loader">Logging in</div>
+                        <div className="login__loader">
+                            <div className="login__loader-text">Logging in</div>
+                            <GearLoader />
+                        </div>
                     ) : (
                         <div className="login__form">
                             <h1 className="login__form-title">Stash Police</h1>
                             <input
                                 type="text"
                                 className="login__form-input"
+                                placeholder="POE SessionId"
                                 value={this.state.sessionId}
                                 onChange={this.changeSessionId}
                             />
+                            {errorText && (
+                                <div className="login__form-error">
+                                    {errorText}
+                                </div>
+                            )}
                             <button
+                                disabled={this.state.sessionId.length === 0}
                                 onClick={this.loginUser}
                                 className="login__form-button"
                             >

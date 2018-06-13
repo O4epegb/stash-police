@@ -1,7 +1,6 @@
 import { observable, action, computed } from 'mobx';
 
-// import { ProcessedTabsData } from './services';
-import { Time } from './constants';
+import { Time, isDevelopment } from './constants';
 import { getReportsFromDisk, updateReportsOnDisk } from './utils';
 import { Reports, Report, UserInfo } from './models';
 
@@ -10,8 +9,6 @@ class StoreClass {
         setInterval(this.toogleUpdateFlag, Time.Minute);
     }
 
-    @observable updateFlag = false;
-
     @observable
     userInfo: UserInfo = {
         accountName: '',
@@ -19,6 +16,8 @@ class StoreClass {
     };
     @observable reports: Reports = [];
     @observable activeReport: Report | null = null;
+    @observable layourLoaderText = '';
+    @observable updateFlag = false;
 
     @computed
     get accountName(): string {
@@ -74,7 +73,15 @@ class StoreClass {
     setActiveReport = (reportId: string) => {
         this.activeReport = this.reports.find(report => report.id === reportId);
     };
+
+    @action
+    setLayoutLoaderText = (text?: string) => {
+        this.layourLoaderText = text || '';
+    };
 }
 
 export const Store = new StoreClass();
-(window as any).Store = Store;
+
+if (isDevelopment) {
+    (window as any).Store = Store;
+}

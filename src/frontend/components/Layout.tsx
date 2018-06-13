@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import posed, { PoseGroup } from 'react-pose';
 import { tween } from 'popmotion';
@@ -7,6 +7,7 @@ import { tween } from 'popmotion';
 import { Routes, isProduction } from '../constants';
 import { Store } from '../Store';
 import { DevMenu } from './DevMenu';
+import { GearLoader } from './GearLoader';
 
 const Column = posed.div({
     enter: {
@@ -34,6 +35,15 @@ const Header = posed.header({
     }
 });
 
+const Loader = posed.div({
+    enter: {
+        opacity: 1
+    },
+    exit: {
+        opacity: 0
+    }
+});
+
 const Main = posed.div();
 
 interface Props {
@@ -48,6 +58,16 @@ export class Layout extends React.Component<Props> {
 
         return (
             <div className="layout">
+                <PoseGroup animateOnMount singleChildOnly>
+                    {Store.layourLoaderText && [
+                        <Loader className="layout__loader" key="loader">
+                            <div className="layout__loader-text">
+                                {Store.layourLoaderText}
+                            </div>
+                            <GearLoader />
+                        </Loader>
+                    ]}
+                </PoseGroup>
                 <PoseGroup animateOnMount>
                     <Header className="header" key="header">
                         <div className="header__account">
@@ -68,6 +88,14 @@ export class Layout extends React.Component<Props> {
                                 </div>
                             </div>
                         </div>
+                        <Link className="header__logo" to={Routes.Main}>
+                            <div className="header__logo-text header__logo-text_left">
+                                Stash
+                            </div>
+                            <div className="header__logo-text header__logo-text_right">
+                                Police
+                            </div>
+                        </Link>
                         <div className="header__menu">
                             <NavLink
                                 activeClassName="header__menu-item_active"
@@ -76,7 +104,7 @@ export class Layout extends React.Component<Props> {
                             >
                                 Create new Report
                             </NavLink>
-                            {!isProduction && <DevMenu />}
+                            {false && !isProduction && <DevMenu />}
                         </div>
                     </Header>
                     <Main className="layout__content" key="layout__content">

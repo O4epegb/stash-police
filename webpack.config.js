@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const createElectronReloadWebpackPlugin = require('electron-reload-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -61,6 +60,15 @@ const frontendConfig = {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.(ttf|eot|woff|woff2)$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: 'fonts/[name].[ext]'
+                    }
+                }
             },
             {
                 test: /\.css$/,

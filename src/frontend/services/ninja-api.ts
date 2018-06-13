@@ -4,33 +4,121 @@ import * as m from '../models';
 import { formatDate, DateFormats } from '../utils';
 import { ApiUrls } from '../constants';
 
-export interface NinjaApiParams {
+export interface GetOverviewParams {
     league: string;
     date?: string;
 }
 
-function requestNinjaApi<T>(url: ApiUrls, params: NinjaApiParams) {
-    return axios.get<T>(url, {
+export interface NinjaCurrencyOverviewParams extends GetOverviewParams {
+    type: m.NinjaOverviewCurrencyTypes;
+}
+
+export interface NinjaItemOverviewParams extends GetOverviewParams {
+    type: m.NinjaOverviewItemTypes;
+}
+
+function requestNinjaCurrencyOverview<T>(params: NinjaCurrencyOverviewParams) {
+    return axios.get<T>(ApiUrls.ninjaCurrencyOverview, {
         params: {
-            ...params,
-            date: params.date || formatDate(new Date(), DateFormats.PoeNinjaApi)
+            date: formatDate(new Date(), DateFormats.PoeNinjaApi),
+            ...params
         }
     });
 }
 
-export function getCurrencyOverview(params: NinjaApiParams) {
-    return requestNinjaApi<m.CurrencyOverview>(
-        ApiUrls.ninjaGetCurrencyOverview,
-        params
-    ).then(({ data }) => {
-        const currencyOverview = data ? data.lines : [];
+function requestNinjaItemOverview<T>(params: NinjaItemOverviewParams) {
+    return axios.get<T>(ApiUrls.ninjaItemOverview, {
+        params: {
+            date: formatDate(new Date(), DateFormats.PoeNinjaApi),
+            ...params
+        }
+    });
+}
 
-        return currencyOverview.reduce(
+function getGenericCurrencyOverview<
+    K extends {
+        currencyTypeName: string;
+    },
+    T extends K & {
+        type: m.NinjaOverviewCurrencyTypes;
+    },
+    P extends {
+        lines: Array<K>;
+    }
+>(type: m.NinjaOverviewCurrencyTypes, params: GetOverviewParams) {
+    return requestNinjaCurrencyOverview<P>({
+        ...params,
+        type
+    }).then(({ data }) => {
+        const overview = data ? data.lines : [];
+
+        return overview.reduce(
             (acc, item) => {
-                acc[item.currencyTypeName] = item;
+                const itemWithType = Object.assign({}, item, { type }) as T;
+                acc[item.currencyTypeName] = itemWithType;
                 return acc;
             },
-            {} as Record<string, m.CurrencyItem>
+            {} as Record<string, T>
         );
     });
+}
+
+function getGenericItemOverview<
+    K extends {
+        name: string;
+    },
+    T extends K & {
+        type: m.NinjaOverviewItemTypes;
+    },
+    P extends {
+        lines: Array<K>;
+    }
+>(type: m.NinjaOverviewItemTypes, params: GetOverviewParams) {
+    return requestNinjaItemOverview<P>({
+        ...params,
+        type
+    }).then(({ data }) => {
+        const overview = data ? data.lines : [];
+
+        return overview.reduce(
+            (acc, item) => {
+                const itemWithType = Object.assign({}, item, { type }) as T;
+                acc[item.name] = itemWithType;
+                return acc;
+            },
+            {} as Record<string, T>
+        );
+    });
+}
+
+export function getCurrencyOverview(params: GetOverviewParams) {
+    return getGenericCurrencyOverview<
+        m.CurrencyItemApi,
+        m.CurrencyItem,
+        m.CurrencyOverviewApi
+    >(m.NinjaOverviewCurrencyTypes.Currency, params);
+}
+
+export function getFragmentOverview(params: GetOverviewParams) {
+    return getGenericCurrencyOverview<
+        m.FragmentItemApi,
+        m.FragmentItem,
+        m.FragmentOverviewApi
+    >(m.NinjaOverviewCurrencyTypes.Fragment, params);
+}
+
+export function getEssenceOverview(params: GetOverviewParams) {
+    return getGenericItemOverview<
+        m.EssenceItemApi,
+        m.EssenceItem,
+        m.EssenceOverviewApi
+    >(m.NinjaOverviewItemTypes.Essence, params);
+}
+
+export function getDivinationCardOverview(params: GetOverviewParams) {
+    return getGenericItemOverview<
+        m.DivinationCardItemApi,
+        m.DivinationCardItem,
+        m.DivinationCardOverview
+    >(m.NinjaOverviewItemTypes.DivinationCard, params);
 }

@@ -1,10 +1,14 @@
-import { Sparkline, ExplicitModifiersItem } from './common';
+import {
+    Sparkline,
+    ExplicitModifiersItem,
+    NinjaOverviewItemTypes
+} from './common';
 
 export interface DivinationCardOverview {
-    lines: DivinationCardItem[];
+    lines: DivinationCardItemApi[];
 }
 
-export interface DivinationCardItem {
+export interface DivinationCardItemApi {
     id: number;
     name: string;
     icon: string;
@@ -28,4 +32,8 @@ export interface DivinationCardItem {
     chaosValue: number;
     exaltedValue: number;
     count: number;
+}
+
+export interface DivinationCardItem extends DivinationCardItemApi {
+    type: NinjaOverviewItemTypes.DivinationCard;
 }

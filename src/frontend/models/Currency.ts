@@ -1,22 +1,26 @@
-import { Sparkline } from './common';
+import { Sparkline, NinjaOverviewCurrencyTypes } from './common';
 
-export interface CurrencyDetails {
+interface CurrencyDetails {
     id: number;
     icon: string;
     name: string;
     poeTradeId: number;
 }
 
-export interface CurrencyItem {
+export interface CurrencyItemApi {
     currencyTypeName: string;
+    chaosEquivalent: number;
     pay: Pay;
     receive: Pay;
     paySparkLine: Sparkline;
     receiveSparkLine: Sparkline;
-    chaosEquivalent: number;
 }
 
-export interface Pay {
+export interface CurrencyItem extends CurrencyItemApi {
+    type: NinjaOverviewCurrencyTypes.Currency;
+}
+
+interface Pay {
     id: number;
     league_id: number;
     pay_currency_id: number;
@@ -28,7 +32,7 @@ export interface Pay {
     includes_secondary: boolean;
 }
 
-export interface CurrencyOverview {
-    lines: CurrencyItem[];
+export interface CurrencyOverviewApi {
+    lines: CurrencyItemApi[];
     currencyDetails: CurrencyDetails[];
 }

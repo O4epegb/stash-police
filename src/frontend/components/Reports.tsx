@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import * as _ from 'lodash';
 import posed, { PoseGroup } from 'react-pose';
 import { tween } from 'popmotion';
+import * as classnames from 'classnames';
 
 import { getTotalItemsValue, pluralize } from '../utils';
 import { Routes } from '../constants';
@@ -39,18 +40,32 @@ export class Reports extends React.Component<Props, {}> {
         Store.deleteReport(report);
     };
 
+    onReportClick = (report: Report) => {
+        if (Store.activeReport === report) {
+            this.props.history.push(Routes.Main);
+            Store.setActiveReport(null);
+        } else {
+            this.props.history.push(Routes.Report.replace(':id', report.id));
+        }
+    };
+
+    onCreateReportClick = () => {
+        this.props.history.push(Routes.ReportsCreate);
+    };
+
     render() {
         const { reports } = Store;
 
         if (reports.length === 0) {
             return (
-                <div>
+                <div className="reports">
                     You have no reports
-                    <div>
-                        <Link to={Routes.ReportsCreate}>
-                            Create first Report
-                        </Link>
-                    </div>
+                    <button
+                        className="reports__new-report-button"
+                        onClick={this.onCreateReportClick}
+                    >
+                        Create first Report
+                    </button>
                 </div>
             );
         }
@@ -63,19 +78,29 @@ export class Reports extends React.Component<Props, {}> {
                         {reports.map(report => (
                             <ReportsItem
                                 key={report.id}
-                                className="reports__item"
+                                className={classnames('reports__item', {
+                                    reports__item_active:
+                                        Store.activeReport === report
+                                })}
+                                onClick={() => this.onReportClick(report)}
                             >
-                                <h3>
-                                    <Link
-                                        to={Routes.Report.replace(
-                                            ':id',
-                                            report.id
-                                        )}
-                                    >
-                                        {report.name}
-                                    </Link>
+                                <h3 className="reports__item-name">
+                                    {report.name}
                                 </h3>
-                                <div>{report.league.id}</div>
+                                <div
+                                    className={classnames(
+                                        'reports__item-league',
+                                        'league-name',
+                                        {
+                                            'league-name_hc':
+                                                report.league.isHardcore,
+                                            'league-name_sc': !report.league
+                                                .isHardcore
+                                        }
+                                    )}
+                                >
+                                    {report.league.id}
+                                </div>
                                 <div>
                                     Created{' '}
                                     <DateValue>{report.createdAt}</DateValue>
@@ -85,11 +110,13 @@ export class Reports extends React.Component<Props, {}> {
                                     <DateValue>{report.updatedAt}</DateValue>
                                 </div>
                                 <div>
-                                    <CurrencyValue
-                                        value={getTotalItemsValue(
-                                            _.last(report.checkouts).items
-                                        )}
-                                    />,{' '}
+                                    <span className="reports__item-value">
+                                        <CurrencyValue
+                                            value={getTotalItemsValue(
+                                                _.last(report.checkouts).items
+                                            )}
+                                        />,{' '}
+                                    </span>
                                     <span>
                                         <NumericValue
                                             value={report.checkouts.length}
@@ -99,7 +126,8 @@ export class Reports extends React.Component<Props, {}> {
                                             'checkout',
                                             'checkouts'
                                         )}
-                                    </span>,{' '}
+                                        ,{' '}
+                                    </span>
                                     <span>
                                         <NumericValue
                                             value={

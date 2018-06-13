@@ -34,7 +34,7 @@ export class CurrencyValue extends React.Component<
         const { name = 'chaos', value, ...restProps } = this.props;
 
         return (
-            <span {...restProps}>
+            <span {...restProps} className="currency-value">
                 <NumericValue value={value} /> {name}
             </span>
         );

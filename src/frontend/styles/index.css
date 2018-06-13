@@ -1,7 +1,6 @@
 :root {
-    --textColorWhite: #DCD3C3;
-    /* --textColorGolden: #a38d6d; */
-    --textColorGolden: #c7ab81;
+    --textColorWhite: #fff8e1;
+    --textColorGolden: #d8b47f;
     --textColor: var(--textColorGolden);
     --linkColor: var(--textColorWhite);
     --mainBg: #0f0f0f;
@@ -22,7 +21,12 @@
     --eee: #00A6C2;
     /* --primary: var(--blue); */
     /* --secondary: var(--red); */
-  }
+}
+
+@font-face {
+    font-family: "marspolice";
+    src: url("../assets/marspolice.ttf") format("truetype")
+}
 
 * {
     box-sizing: border-box;
@@ -60,9 +64,10 @@ body {
     min-width: 800px;
     min-height: 600px;
     color: var(--textColor);
-    user-select: none;
-    cursor: default;
+    background-color: var(--mainBg);
     font-family: 'Roboto', sans-serif;
+    cursor: default;
+    user-select: none;
 }
 
 a {
@@ -98,16 +103,21 @@ h3 {
 }
 
 button {
-    padding: 4px 8px;
+    padding: 8px 16px;
     border: none;
-    color: var(--buttonText);
-    background-color: #00A6C2;
+    color: #fff;
+    background-color: #2364AA;
     cursor: pointer;
 
     &[disabled] {
         background-color: #B6A999;
         color: #353535;
-        cursor: not-allowed;
+        cursor: default;
+        /* cursor: not-allowed; */
+    }
+
+    &:hover:not([disabled]) {
+        background-color: #2a75c5;
     }
 
     &:focus {
@@ -142,6 +152,7 @@ button {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
@@ -167,7 +178,15 @@ button {
     }
 
     &__loader {
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        &-text {
+            margin-bottom: 20px;
+            font-size: 26px;
+        }
     }
 
     &__form {
@@ -180,46 +199,32 @@ button {
             text-align: center;
         }
 
+        &-error {
+            margin-top: 10px;
+            color: var(--red);
+        }
+
         &-input {
             margin-top: 20px;
+            font-size: 20px;
+            padding: 8px 0;
+            color: var(--textColorWhite);
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid var(--textColorWhite);
+            outline: none;
         }
 
         &-button {
             margin-top: 20px;
+            font-size: 20px;
+            padding: 8px;
         }
     }
 }
 
-.create-report {
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    &__loader {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-color: rgba(var(--mainBgRgb), 0.8);
-    }
-
-    &__tabs-list {
-        flex: 1;
-        overflow-y: auto;
-    }
-
-    &__tab {
-        padding: 4px 8px;
-    }
-}
-
 .layout {
+    position: relative;
     display: grid;
     grid-template-rows: 68px calc(100% - 68px);
     height: 100%;
@@ -237,6 +242,24 @@ button {
         padding: 10px;
         overflow: auto;
         background-color: rgba(var(--mainBgRgb), 0.8);
+    }
+
+    &__loader {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(var(--mainBgRgb), 0.8);
+        z-index: 1;
+
+        &-text {
+            margin-bottom: 20px;
+        }
     }
 }
 
@@ -283,11 +306,34 @@ button {
             justify-content: center;
             padding: 0px 10px;
             cursor: pointer;
+            box-shadow: inset 0px -1px 0 0px var(--primary);
             transition: box-shadow 0.2s;
 
             &_active,
             &:hover {
                 box-shadow: inset 0px -4px 0 0px var(--primary);
+            }
+        }
+    }
+
+    &__logo {
+        font-family: 'marspolice', 'Roboto';
+        display: flex;
+        align-items: center;
+        font-size: 40px;
+
+        &-text {
+            border-bottom: 4px solid #ffffff;
+            margin-bottom: 4px;
+
+            &_left {
+                color: var(--red);
+                padding-right: 5px;
+            }
+
+            &_right {
+                color: var(--blue);
+                padding-left: 5px;
             }
         }
     }
@@ -311,43 +357,244 @@ button {
     &__item {
         padding: 10px;
         background-color: var(--mainBg);
-        border: 1px solid var(--mainBorder);
+        box-shadow: inset 0 0 0 1px var(--mainBorder);
+        transition: box-shadow 0.15s;
+        cursor: pointer;
+
+        &:hover:not(&_active) {
+            box-shadow: inset 0 0 0 1px var(--primary);
+        }
 
         & + & {
             margin-top: 10px;
+        }
+
+        &_active {
+            box-shadow: inset 0 0 0 2px var(--primary);
+        }
+
+        &-name {
+            color: var(--textColorWhite);
+        }
+
+        &-league {
+        }
+
+        &-value {
+        }
+    }
+
+    &__new-report-button {
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+.create-report {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        margin-bottom: 20px;
+    }
+
+    &__name {
+        display: flex;
+
+        &-input {
+            width: 100%;
+            padding: 8px 0;
+            padding-top: 0;
+            font-size: 20px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        &-generate {
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+    }
+
+    &__content {
+        display: flex;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    &__controls {
+        display: flex;
+        flex-direction: column;
+        margin-right: 10px;
+    }
+
+    &__tabs {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow-y: auto;
+
+        &-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        &-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            min-height: 39px;
+        }
+    }
+
+    &__tab {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &-checkbox {
+            position: relative;
+            top: -1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            border: 2px solid var(--primary);
+
+            &:after {
+                content: '';
+                width: 6px;
+                height: 6px;
+                background-color: #fff8e1;
+                transform: scale(0.5);
+                opacity: 0;
+                transition: all 0.2s;
+            }
+
+            &_active:after {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        &-info {
+            flex: 1;
+            padding: 4px 8px;
+        }
+
+        & + & {
+            border-top: 1px solid var(--mainBg);
+        }
+    }
+
+    &__loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex: 1;
+
+        &-text {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+    }
+
+    &__button-list {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    &__button {
+        width: 100%;
+        flex-shrink: 0;
+
+        & + & {
+            margin-top: 10px;
+        }
+    }
+
+    &__create-button {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+        font-size: 20px;
+
+        &-warning {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 2px;
+            color: var(--red);
+            font-size: 10px;
+            white-space: nowrap;
         }
     }
 }
 
-.league-list {
+.leagues {
+    margin: 20px 0px;
+
+    &__title {
+
+    }
+
+    &__list {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        min-height: 50px;
+    }
+
     &__item {
         display: flex;
         align-items: center;
+        height: 40px;
         padding: 4px 8px;
-        border-left: 3px solid white;
+        margin-top: 10px;
+        margin-right: 10px;
+        cursor: pointer;
+        color: #fff;
 
         &_hc {
-            border-left-color: #FE0000;
+            background-color: var(--red);
         }
 
         &_sc {
-            border-left-color: #00C8FE;
+            background-color: var(--blue);
         }
 
         & + & {
-            margin-top: 10px;
         }
     }
 
     &__clear-league {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 20px;
         height: 20px;
-        padding: 0;
+        margin-top: 10px;
+        background-color: var(--red);
+        border-radius: 50%;
+        color: #fff;
         font-size: 10px;
-        margin-left: 4px;
-        border: none;
-        border-radius: 0;
-        background-color: #333333;
+        cursor: pointer;
     }
 }
 
@@ -361,6 +608,7 @@ button {
         flex-wrap: nowrap;
         margin: 10px 0;
         padding-bottom: 10px;
+        min-height: 95px;
         overflow-x: auto;
     }
 
@@ -368,11 +616,30 @@ button {
         flex: 0 0 auto;
         padding: 10px;
         background-color: var(--mainBg);
-        box-shadow: inset 0 0 0 1px var(--primary);
+        box-shadow: inset 0 0 0 1px var(--textColorGolden);
+        transition: box-shadow 0.15s;
         z-index: 1;
+        cursor: pointer;
+
+        &:hover:not(&_active) {
+            box-shadow: inset 0 0 0 1px var(--primary);
+        }
 
         &_active {
-            box-shadow: inset 0 0 0 3px var(--primary);
+            box-shadow: inset 0 0 0 2px var(--primary);
+        }
+
+        &-title {
+            color: var(--textColorWhite);
+            font-weight: 600;
+        }
+
+        &-date {
+
+        }
+
+        &-value {
+
         }
     }
 
@@ -380,7 +647,7 @@ button {
         flex: 0 0 auto;
         height: 2px;
         width: 40px;
-        background-color: var(--primary);
+        background-color: var(--textColorGolden);
     }
 } 
 
@@ -448,19 +715,27 @@ button {
     overflow-y: auto;
 
     &__header {
-
-    }
-
-    &__title {
         display: flex;
         justify-content: space-between;
         align-items: stretch;
         min-height: 30px;
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
 
         &-text {
-            display: flex;
-            align-items: center;
+            color: var(--textColorWhite);
         }
+
+        &-date {
+
+        }
+    }
+
+    &__table {
+        margin-top: 10px;
     }
 }
 
@@ -500,16 +775,36 @@ button {
     font-family: 'Roboto Mono', monospace;
 }
 
-.ReactTable .rt-thead .rt-th {
-    transition: box-shadow 0.3s;
+.currency-value {
+    color: var(--primary);
 }
 
-.ReactTable .rt-thead .rt-th.-sort-asc {
-    box-shadow: inset 0 3px 0 0 var(--primary);
+.league-name {
+    &_hc {
+        color: var(--red);
+    }
+
+    &_sc {
+        color: var(--blue);
+    }
 }
 
-.ReactTable .rt-thead .rt-th.-sort-desc {
-    box-shadow: inset 0 -3px 0 0 var(--primary);
+.ReactTable {
+    border: none;
+
+    .rt-thead {
+        .rt-th {
+            transition: box-shadow 0.3s;
+
+            &.-sort-asc {
+                box-shadow: inset 0 3px 0 0 var(--primary);
+            }
+
+            &.-sort-desc {
+                box-shadow: inset 0 -3px 0 0 var(--primary);
+            }
+        }
+    }
 }
 
 .dev-menu {
@@ -521,3 +816,28 @@ button {
     background-color: var(--primary);
     color: #fff;
 }
+
+.gear-loader {
+    display: flex;
+    fill: var(--textColorWhite);
+
+    &__item {
+        animation: animation-gear-spin 4s linear infinite;
+
+        & + & {
+            margin-left: -15px;
+            animation: animation-gear-spin-back 4s linear infinite;
+
+            & svg {
+                transform: rotate(30deg);
+            }
+        }
+
+        & svg {
+            display: block;
+        }
+    }
+}
+
+@keyframes animation-gear-spin { 100% { transform:rotate(360deg); } }
+@keyframes animation-gear-spin-back { 100% { transform:rotate(-360deg); } }

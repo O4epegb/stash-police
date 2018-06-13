@@ -84,8 +84,8 @@ function getStashItems(params: {
 }
 
 export interface ProcessedTabsData {
-    totalTabs: number;
-    done: boolean;
+    totalTabsNumber: number;
+    processedTabsNumber: number;
     tab: m.Tab;
 }
 
@@ -105,7 +105,6 @@ export function getItemsByTab(
     tabsToProccess: m.Tabs = [],
     updater?: ProcessedTabsDataUpdater
 ) {
-    // TODO add dynamic rate limit
     return getTabsByLeague(accountName, league).then(tabs => {
         const filteredTabs =
             tabsToProccess.length === 0
@@ -114,21 +113,24 @@ export function getItemsByTab(
                       return tabsToProccess.find(t => t.id === tab.id);
                   });
 
+        let processedTabsNumber = 0;
+
         const promisedItemsByTab = filteredTabs.map((currentTab, index) => {
             return delay(getStashItemsDelay * index)
-                .then(() =>
-                    getStashItems({
+                .then(() => {
+                    return getStashItems({
                         accountName,
                         tabIndex: currentTab.i,
                         tabs: 0,
                         league
-                    })
-                )
+                    });
+                })
                 .then(tabData => {
+                    processedTabsNumber = processedTabsNumber + 1;
                     if (updater) {
                         updater({
-                            totalTabs: tabs.length,
-                            done: tabs.length === index + 1,
+                            totalTabsNumber: filteredTabs.length,
+                            processedTabsNumber,
                             tab: currentTab
                         });
                     }
@@ -189,58 +191,91 @@ export function createCheckout({
     updater?: ProcessedTabsDataUpdater;
 }): Promise<m.Checkout> {
     const leagueId = league.id;
+    const ninjaApiParams = { league: leagueId };
 
     return Promise.all([
-        ninjaApi.getCurrencyOverview({ league: leagueId }),
-        getItemsByTab(accountName, leagueId, tabs, updater)
-    ]).then(([currencyOverview, tabsWithItems]) => {
-        const tabsUsed = tabsWithItems.map(t => t.tab);
+        getItemsByTab(accountName, leagueId, tabs, updater),
+        ninjaApi.getCurrencyOverview(ninjaApiParams),
+        ninjaApi.getEssenceOverview(ninjaApiParams),
+        ninjaApi.getDivinationCardOverview(ninjaApiParams),
+        ninjaApi.getFragmentOverview(ninjaApiParams)
+    ]).then(
+        ([
+            tabsWithItems,
+            currencyOverview,
+            essenceOverview,
+            divinationCardOverview,
+            fragmentOverview
+        ]) => {
+            const itemsOverview = {
+                ...currencyOverview,
+                ...essenceOverview,
+                ...divinationCardOverview,
+                ...fragmentOverview
+            };
+            const tabsUsed = tabsWithItems.map(t => t.tab);
 
-        const currency = _.flatten(
-            tabsWithItems.map(tab => {
-                return tab.items.filter(
-                    item =>
-                        currencyOverview[item.typeLine] ||
-                        item.typeLine === ItemNames.ChaosOrb
-                );
-            })
-        );
+            const items = _.flatten(
+                tabsWithItems.map(tab => {
+                    return tab.items.filter(
+                        item =>
+                            itemsOverview[item.typeLine] ||
+                            item.typeLine === ItemNames.ChaosOrb
+                    );
+                })
+            );
 
-        const currencyByName = currency.reduce(
-            (acc, item) => {
-                const { typeLine: currencyName, stackSize } = item;
+            const itemsByName = items.reduce(
+                (acc, item) => {
+                    const { typeLine: itemName, stackSize } = item;
 
-                const currencyObject = acc[currencyName] || {
-                    stackSize: 0,
-                    cost: 0,
-                    name: currencyName,
-                    originalItem: item
-                };
+                    const itemObject = acc[itemName] || {
+                        stackSize: 0,
+                        cost: 0,
+                        name: itemName,
+                        originalItem: item
+                    };
 
-                const newStackSize = currencyObject.stackSize + stackSize;
-                const chaosEquivalent =
-                    currencyName === ItemNames.ChaosOrb
-                        ? 1
-                        : currencyOverview[currencyName].chaosEquivalent;
+                    const newStackSize = itemObject.stackSize + stackSize;
+                    const chaosEquivalent =
+                        itemName === ItemNames.ChaosOrb
+                            ? 1
+                            : getChaosEquivalent(itemsOverview[itemName]);
 
-                acc[currencyName] = {
-                    ...currencyObject,
-                    stackSize: newStackSize,
-                    cost: newStackSize * chaosEquivalent
-                };
+                    acc[itemName] = {
+                        ...itemObject,
+                        stackSize: newStackSize,
+                        cost: newStackSize * chaosEquivalent
+                    };
 
-                return acc;
-            },
-            {} as m.CheckoutItems
-        );
+                    return acc;
+                },
+                {} as m.CheckoutItems
+            );
 
-        const checkout: m.Checkout = {
-            id: uuid(),
-            createdAt: new Date().toISOString(),
-            items: currencyByName,
-            tabs: tabsUsed
-        };
+            const checkout: m.Checkout = {
+                id: uuid(),
+                createdAt: new Date().toISOString(),
+                items: itemsByName,
+                tabs: tabsUsed
+            };
 
-        return checkout;
-    });
+            return checkout;
+        }
+    );
+}
+
+function getChaosEquivalent<
+    T extends {
+        chaosEquivalent: number;
+    },
+    P extends {
+        chaosValue: number;
+    }
+>(item: T | P): number {
+    if ('chaosEquivalent' in item) {
+        return item.chaosEquivalent;
+    } else {
+        return item.chaosValue;
+    }
 }

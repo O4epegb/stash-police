@@ -71,13 +71,14 @@ export interface TabApi {
 }
 
 export enum TabType {
-    Currency = 'CurrencyStash',
-    DivinationCard = 'DivinationCardStash',
-    Essence = 'EssenceStash',
-    Map = 'MapStash',
-    Normal = 'NormalStash',
-    Premium = 'PremiumStash',
-    Quad = 'QuadStash'
+    CurrencyStash = 'CurrencyStash',
+    FragmentStash = 'FragmentStash',
+    DivinationCardStash = 'DivinationCardStash',
+    EssenceStash = 'EssenceStash',
+    MapStash = 'MapStash',
+    NormalStash = 'NormalStash',
+    PremiumStash = 'PremiumStash',
+    QuadStash = 'QuadStash'
 }
 
 export interface Tab

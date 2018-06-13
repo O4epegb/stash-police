@@ -47,22 +47,23 @@ export enum ItemNames {
 export const getStashItemsDelay = isProduction ? 1350 : 100;
 
 export enum ApiUrls {
-    leagues = 'http://api.pathofexile.com/leagues?type=main&compact=1',
+    leagues = 'https://pathofexile.com/api/leagues?type=main&compact=1',
     index = 'https://pathofexile.com',
     login = 'https://pathofexile.com/login',
     myAccount = 'https://pathofexile.com/my-account',
     getStashItems = 'https://pathofexile.com/character-window/get-stash-items',
-    ninjaGetCurrencyOverview = 'http://poe.ninja/api/Data/GetCurrencyOverview'
+    ninjaCurrencyOverview = 'http://poe.ninja/api/data/currencyoverview',
+    ninjaItemOverview = 'http://poe.ninja/api/data/itemoverview',
+    ninjaGetCurrencyOverview = 'http://poe.ninja/api/Data/GetCurrencyOverview',
+    ninjaGetFragmentOverview = 'http://poe.ninja/api/Data/GetFragmentOverview',
+    ninjaGetEssenceOverview = 'http://poe.ninja/api/Data/GetEssenceOverview',
+    ninjaGetDivinationCardsOverview = 'http://poe.ninja/api/Data/GetDivinationCardsOverview'
 
     // POE_LOGIN_STEAM = 'https://pathofexile.com/login/steam',
     // POE_MAIN_PAGE = 'https://pathofexile.com/',
     // POE_GET_CHARACTERS = 'https://pathofexile.com/character-window/get-characters',
 
-    // NINJA_FRAGMENT_OVERVIEW = 'http://poe.ninja/api/Data/GetFragmentOverview',
-    // NINJA_ESSENCE_OVERVIEW = 'http://poe.ninja/api/Data/GetEssenceOverview',
-
     // NINJA_UNIQUE_MAP_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueMapOverview',
-    // NINJA_DIV_CARDS_OVERVIEW = 'http://poe.ninja/api/Data/GetDivinationCardsOverview',
     // NINJA_MAP_OVERVIEW = 'http://poe.ninja/api/Data/GetMapOverview',
 
     // NINJA_UNIQUE_JEWEL_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueJewelOverview',
