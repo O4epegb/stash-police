@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { GearLoader } from '../components/GearLoader';
+import { Logo } from '../components/Logo';
 import { setSessionIdCookie } from '../utils';
 import { getAccountInfo } from '../services';
 import { UserInfo } from '../models';
@@ -69,6 +70,9 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
         return (
             <div className="login">
                 <div className="login__wrapper">
+                    <div className="login__logo">
+                        <Logo />
+                    </div>
                     {isLoading ? (
                         <div className="login__loader">
                             <div className="login__loader-text">Logging in</div>
@@ -76,7 +80,6 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
                         </div>
                     ) : (
                         <div className="login__form">
-                            <h1 className="login__form-title">Stash Police</h1>
                             <input
                                 type="text"
                                 className="login__form-input"

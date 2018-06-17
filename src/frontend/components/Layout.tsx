@@ -8,6 +8,7 @@ import { Routes, isProduction } from '../constants';
 import { Store } from '../Store';
 import { DevMenu } from './DevMenu';
 import { GearLoader } from './GearLoader';
+import { Logo } from './Logo';
 
 const Column = posed.div({
     enter: {
@@ -89,12 +90,7 @@ export class Layout extends React.Component<Props> {
                             </div>
                         </div>
                         <Link className="header__logo" to={Routes.Main}>
-                            <div className="header__logo-text header__logo-text_left">
-                                Stash
-                            </div>
-                            <div className="header__logo-text header__logo-text_right">
-                                Police
-                            </div>
+                            <Logo />
                         </Link>
                         <div className="header__menu">
                             <NavLink
