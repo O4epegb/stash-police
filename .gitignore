@@ -2,4 +2,5 @@
 .forever-ignore
 node_modules
 build
+dist
 npm-debug.log

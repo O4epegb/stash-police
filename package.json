@@ -2,13 +2,40 @@
     "name": "stash-police",
     "version": "1.0.0",
     "description": "Stash Police - Path Of Exile stash assistant app",
+    "main": "build/backend.js",
+    "author": {
+        "name": "Daniil Demidovich",
+        "email": "daniil.demidovich@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/O4epegb/stash-police"
+    },
     "scripts": {
         "precommit": "lint-staged",
         "dev": "cross-env ELECTRON_CONNECT=true webpack --watch",
         "build": "cross-env NODE_ENV=production webpack",
         "build:dev": "webpack",
         "lint": "tslint --fix \"./src/**/*.ts{,x}\"",
-        "prettier": "prettier --parser typescript --single-quote --tab-width 4 --write \"./src/**/*.ts{,x}\""
+        "prettier": "prettier --parser typescript --single-quote --tab-width 4 --write \"./src/**/*.ts{,x}\"",
+        "release": "electron-builder"
+    },
+    "build": {
+        "appId": "com.electron.stach-police",
+        "productName": "Stash Police",
+        "files": [
+            "build/**/*",
+            "node_modules/**/*",
+            "package.json"
+        ],
+        "icon": "./src/frontend/assets/police-icon.png",
+        "publish": {
+            "provider": "github"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true
+        }
     },
     "browserslist": [
         "last 2 Chrome versions"
@@ -25,11 +52,10 @@
         "cheerio": "^1.0.0-rc.2",
         "classnames": "^2.2.6",
         "date-fns": "^1.29.0",
-        "electron": "^2.0.2",
-        "electron-connect": "^0.6.3",
+        "electron-updater": "^2.21.10",
         "fs-extra": "^6.0.1",
         "lodash": "^4.17.10",
-        "mobx": "^5.0.2",
+        "mobx": "^5.0.3",
         "mobx-react": "^5.2.3",
         "react": "^16.4.1",
         "react-dom": "^16.4.1",
@@ -43,15 +69,19 @@
         "@types/cheerio": "^0.22.7",
         "@types/classnames": "^2.2.4",
         "@types/fs-extra": "^5.0.3",
-        "@types/lodash": "4.14.109",
-        "@types/node": "^10.3.3",
-        "@types/react": "^16.3.18",
+        "@types/lodash": "4.14.110",
+        "@types/node": "^10.3.4",
+        "@types/react": "^16.4.0",
         "@types/react-dom": "^16.0.6",
         "@types/react-router-dom": "^4.2.7",
         "@types/react-table": "^6.7.11",
         "@types/uuid": "^3.4.3",
+        "copy-webpack-plugin": "^4.5.1",
         "cross-env": "^5.2.0",
         "css-loader": "^0.28.11",
+        "electron": "^2.0.2",
+        "electron-builder": "^20.15.1",
+        "electron-connect": "^0.6.3",
         "electron-reload-webpack-plugin": "^2.0.1",
         "file-loader": "^1.1.11",
         "fork-ts-checker-webpack-plugin": "^0.4.2",

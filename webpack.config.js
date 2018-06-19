@@ -2,6 +2,7 @@ const path = require('path');
 const createElectronReloadWebpackPlugin = require('electron-reload-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const useElectronConnect = process.env.ELECTRON_CONNECT === 'true';
@@ -24,6 +25,8 @@ const frontendConfig = {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.styl']
     },
     plugins: [
+        !isProduction &&
+            new CopyWebpackPlugin([{ from: './dev-app-update.yml', to: './' }]),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'src/index.html',
