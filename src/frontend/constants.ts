@@ -8,8 +8,8 @@ export const poeCookieName = 'POESESSID';
 
 export enum Time {
     Second = 1000,
-    Minute = 1000 * 60,
-    Hour = 1000 * 60 * 60
+    Minute = Time.Second * 60,
+    Hour = Time.Minute * 60
 }
 
 export enum Routes {
@@ -58,10 +58,6 @@ export enum ApiUrls {
     ninjaGetFragmentOverview = 'http://poe.ninja/api/Data/GetFragmentOverview',
     ninjaGetEssenceOverview = 'http://poe.ninja/api/Data/GetEssenceOverview',
     ninjaGetDivinationCardsOverview = 'http://poe.ninja/api/Data/GetDivinationCardsOverview'
-
-    // POE_LOGIN_STEAM = 'https://pathofexile.com/login/steam',
-    // POE_MAIN_PAGE = 'https://pathofexile.com/',
-    // POE_GET_CHARACTERS = 'https://pathofexile.com/character-window/get-characters',
 
     // NINJA_UNIQUE_MAP_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueMapOverview',
     // NINJA_MAP_OVERVIEW = 'http://poe.ninja/api/Data/GetMapOverview',

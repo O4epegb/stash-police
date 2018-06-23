@@ -19,7 +19,7 @@ import { LoginPage } from './pages/LoginPage';
 import { ReportPage } from './pages/ReportPage';
 import { MainPage } from './pages/MainPage';
 import { CreateReportPage } from './pages/CreateReportPage';
-import { Reports } from './components/Reports';
+import { ReportsList } from './components/Reports';
 import { Layout } from './components/Layout';
 import { UserInfo } from './models';
 
@@ -113,7 +113,7 @@ export class App extends React.Component<Props, State> {
                         />
                         <Layout
                             onLogout={this.onLogout}
-                            leftColumn={() => <Route component={Reports} />}
+                            leftColumn={() => <Route component={ReportsList} />}
                         >
                             <Route
                                 exact

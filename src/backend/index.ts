@@ -1,13 +1,31 @@
-import * as path from 'path';
 import { app, BrowserWindow } from 'electron';
 import { client } from 'electron-connect';
-import { autoUpdater } from 'electron-updater';
 
-const isProduction = process.env.NODE_ENV === 'production';
+import { isProduction } from './constants';
+import { startUpdater } from './updater';
+
 const useElectronConnect = process.env.ELECTRON_CONNECT === 'true';
 
+let mainWindow: BrowserWindow;
+
+const isSecondInstance = app.makeSingleInstance(() => {
+    if (!mainWindow) {
+        return;
+    }
+
+    if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+    }
+
+    mainWindow.focus();
+});
+
+if (isSecondInstance) {
+    app.quit();
+}
+
 function onAppReady() {
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 1280,
         height: 720,
         center: true,
@@ -19,36 +37,15 @@ function onAppReady() {
 
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+    startUpdater(mainWindow);
+
     if (!isProduction) {
         mainWindow.webContents.openDevTools();
-
-        autoUpdater.updateConfigPath = path.join(
-            __dirname,
-            'dev-app-update.yml'
-        );
     }
 
     if (useElectronConnect) {
         client.create(mainWindow);
     }
-
-    autoUpdater.on('error', error => {
-        console.log('update-error', error);
-    });
-
-    autoUpdater.on('update-available', () => {
-        console.log('update-available');
-    });
-
-    autoUpdater.on('update-not-available', () => {
-        console.log('update-not-available');
-    });
-
-    autoUpdater.on('update-downloaded', () => {
-        console.log('update-downloaded');
-    });
-
-    autoUpdater.checkForUpdates();
 }
 
 app.on('window-all-closed', () => {

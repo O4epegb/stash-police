@@ -1,6 +1,6 @@
 {
     "name": "stash-police",
-    "version": "1.0.0",
+    "version": "1.0.6",
     "description": "Stash Police - Path Of Exile stash assistant app",
     "main": "build/backend.js",
     "author": {
@@ -18,7 +18,8 @@
         "build:dev": "webpack",
         "lint": "tslint --fix \"./src/**/*.ts{,x}\"",
         "prettier": "prettier --parser typescript --single-quote --tab-width 4 --write \"./src/**/*.ts{,x}\"",
-        "release": "electron-builder"
+        "release1": "env-cmd ./.forever-ignore/.env electron-builder --publish=always",
+        "release": "npm run build && env-cmd ./.forever-ignore/.env electron-builder"
     },
     "build": {
         "appId": "com.electron.stach-police",
@@ -30,7 +31,8 @@
         ],
         "icon": "./src/frontend/assets/police-icon.png",
         "publish": {
-            "provider": "github"
+            "provider": "github",
+            "releaseType": "draft"
         },
         "nsis": {
             "oneClick": false,
@@ -62,7 +64,7 @@
         "react-pose": "^2.1.2",
         "react-router-dom": "^4.3.1",
         "react-table": "^6.8.6",
-        "tslib": "^1.9.2",
+        "tslib": "^1.9.3",
         "uuid": "^3.2.1"
     },
     "devDependencies": {
@@ -70,8 +72,8 @@
         "@types/classnames": "^2.2.4",
         "@types/fs-extra": "^5.0.3",
         "@types/lodash": "4.14.110",
-        "@types/node": "^10.3.4",
-        "@types/react": "^16.4.0",
+        "@types/node": "^10.3.5",
+        "@types/react": "^16.4.1",
         "@types/react-dom": "^16.0.6",
         "@types/react-router-dom": "^4.2.7",
         "@types/react-table": "^6.7.11",
@@ -79,10 +81,11 @@
         "copy-webpack-plugin": "^4.5.1",
         "cross-env": "^5.2.0",
         "css-loader": "^0.28.11",
-        "electron": "^2.0.2",
+        "electron": "^2.0.3",
         "electron-builder": "^20.15.1",
         "electron-connect": "^0.6.3",
         "electron-reload-webpack-plugin": "^2.0.1",
+        "env-cmd": "^8.0.2",
         "file-loader": "^1.1.11",
         "fork-ts-checker-webpack-plugin": "^0.4.2",
         "html-webpack-plugin": "^3.2.0",

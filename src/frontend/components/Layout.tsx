@@ -88,6 +88,21 @@ export class Layout extends React.Component<Props> {
                                     Logout
                                 </div>
                             </div>
+                            {Store.updateText && (
+                                <div className="update-info">
+                                    <div className="update-info__text">
+                                        {Store.updateText}
+                                    </div>
+                                    {Store.updateButtonText && (
+                                        <button
+                                            className="update-info__button"
+                                            onClick={Store.onUpdateButtonClick}
+                                        >
+                                            {Store.updateButtonText}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                         </div>
                         <Link className="header__logo" to={Routes.Main}>
                             <Logo />
