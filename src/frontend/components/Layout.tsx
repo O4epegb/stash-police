@@ -115,7 +115,7 @@ export class Layout extends React.Component<Props> {
                             >
                                 Create new Report
                             </NavLink>
-                            {false && !isProduction && <DevMenu />}
+                            {!isProduction && <DevMenu />}
                         </div>
                     </Header>
                     <Main className="layout__content" key="layout__content">

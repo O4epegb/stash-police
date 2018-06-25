@@ -1,6 +1,9 @@
 import { app, BrowserWindow } from 'electron';
 import { client } from 'electron-connect';
+import * as electronUnhandled from 'electron-unhandled';
 
+import { logger } from '../common';
+import { windowStateKeeper } from './utils';
 import { isProduction } from './constants';
 import { startUpdater } from './updater';
 
@@ -24,20 +27,40 @@ if (isSecondInstance) {
     app.quit();
 }
 
+electronUnhandled({
+    logger: logger.error
+});
+
 function onAppReady() {
+    const mainWindowState = windowStateKeeper();
+
     mainWindow = new BrowserWindow({
-        width: 1280,
-        height: 720,
+        x: mainWindowState.x,
+        y: mainWindowState.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height,
         center: true,
         frame: true,
+        show: false,
+        transparent: false,
         title: 'Stash Police',
         minHeight: 700,
-        minWidth: 900
+        minWidth: 900,
+        backgroundColor: '#0f0f0f'
     });
 
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+    if (mainWindowState.isMaximized) {
+        mainWindow.maximize();
+    }
+
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+    });
+
     startUpdater(mainWindow);
+    mainWindowState.track(mainWindow);
 
     if (!isProduction) {
         mainWindow.webContents.openDevTools();

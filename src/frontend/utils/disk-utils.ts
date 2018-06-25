@@ -1,27 +1,7 @@
 import * as fs from 'fs-extra';
 
-import { settingsPath, reportsPath } from '../constants';
-import { Reports, Settings, ReportsFile } from '../models';
-
-export function getSettings(): Settings {
-    if (!fs.pathExistsSync(settingsPath)) {
-        fs.writeJsonSync(settingsPath, {
-            version: '1.0',
-            userInfo: {}
-        } as Settings);
-    }
-
-    return fs.readJsonSync(settingsPath);
-}
-
-export function updateSettings(newSettings: Partial<Settings>): Settings {
-    const currentSettings = getSettings();
-    const nextSettings = Object.assign({}, currentSettings, newSettings);
-
-    fs.writeJsonSync(settingsPath, nextSettings);
-
-    return nextSettings;
-}
+import { reportsPath } from '../../common';
+import { Reports, ReportsFile } from '../models';
 
 function ensureReportsFileExists() {
     if (!fs.pathExistsSync(reportsPath)) {

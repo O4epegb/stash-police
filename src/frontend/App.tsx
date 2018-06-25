@@ -5,14 +5,10 @@ import { observer } from 'mobx-react';
 
 import { Store } from './Store';
 import { getAccountInfo } from './services';
-import { Report } from './models';
+import { Report, UserInfo } from './models';
 import { isProduction, Routes } from './constants';
-import {
-    getSettings,
-    updateSettings,
-    setSessionIdCookie,
-    removeSessionIdCookie
-} from './utils';
+import { setSessionIdCookie, removeSessionIdCookie } from './utils';
+import { getSettings, updateSettings } from '../common';
 
 import { StartupPage } from './pages/StartupPage';
 import { LoginPage } from './pages/LoginPage';
@@ -21,7 +17,6 @@ import { MainPage } from './pages/MainPage';
 import { CreateReportPage } from './pages/CreateReportPage';
 import { ReportsList } from './components/Reports';
 import { Layout } from './components/Layout';
-import { UserInfo } from './models';
 
 configure({ enforceActions: true });
 

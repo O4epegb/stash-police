@@ -8,7 +8,7 @@ import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import { Tab, CheckoutItems } from '../models';
 import { prefixes, suffixes } from '../data';
 import { ApiUrls, poeCookieName } from '../constants';
-import { updateSettings } from './disk-utils';
+import { updateSettings } from '../../common';
 
 export * from './disk-utils';
 
@@ -24,8 +24,8 @@ export function isColorBright(r: number, g: number, b: number): boolean {
 }
 
 export enum DateFormats {
-    Default = 'DD-MM-YYYY',
-    DefaultWithTime = 'DD-MM-YYYY, HH:mm',
+    Default = 'DD.MM.YYYY',
+    DefaultWithTime = 'DD.MM.YYYY, HH:mm',
     PoeNinjaApi = 'YYYY-MM-DD'
 }
 

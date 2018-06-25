@@ -3,14 +3,21 @@ import { ipcRenderer } from 'electron';
 
 import { Time, isDevelopment } from './constants';
 import { getReportsFromDisk, updateReportsOnDisk } from './utils';
-import { Reports, Report, UserInfo } from './models';
+import { Reports, Report, UserInfo, Leagues } from './models';
+import { getLeagues } from './services';
 import { IpcAction, IpcUpdateStatus, IpcUpdateAction } from '../common';
+
+function sendUpdateMessage(ipcAction: IpcUpdateAction) {
+    ipcRenderer.send(IpcAction.Update, ipcAction);
+}
 
 class StoreClass {
     constructor() {
         setInterval(this.toogleUpdateFlag, Time.Minute);
+        setInterval(this.updateLeagues, Time.Minute * 5);
+        this.updateLeagues();
 
-        this.sendUpdateMessage('check');
+        sendUpdateMessage('check');
 
         ipcRenderer.on(
             IpcAction.Update,
@@ -36,22 +43,6 @@ class StoreClass {
         );
     }
 
-    sendUpdateMessage = (ipcAction: IpcUpdateAction) => {
-        ipcRenderer.send(IpcAction.Update, ipcAction);
-    };
-
-    @action
-    onUpdateButtonClick = () => {
-        if (this.updateStatus === 'available') {
-            this.sendUpdateMessage('download');
-        } else if (this.updateStatus === 'ready-to-install') {
-            this.sendUpdateMessage('install');
-        } else if (this.updateStatus === 'error') {
-            this.updateText = '';
-            this.updateButtonText = '';
-        }
-    };
-
     @observable updateText = '';
     @observable updateButtonText = '';
     @observable updateStatus: IpcUpdateStatus = 'checking';
@@ -61,6 +52,7 @@ class StoreClass {
         accountName: '',
         avatarUrl: ''
     };
+    @observable leagues: Leagues = [];
     @observable reports: Reports = [];
     @observable activeReport: Report | null = null;
     @observable layourLoaderText = '';
@@ -75,6 +67,27 @@ class StoreClass {
     get avatarUrl(): string {
         return this.userInfo.avatarUrl;
     }
+
+    @action
+    onUpdateButtonClick = () => {
+        if (this.updateStatus === 'available') {
+            sendUpdateMessage('download');
+        } else if (this.updateStatus === 'ready-to-install') {
+            sendUpdateMessage('install');
+        } else if (this.updateStatus === 'error') {
+            this.updateText = '';
+            this.updateButtonText = '';
+        }
+    };
+
+    updateLeagues = () => {
+        return getLeagues().then(this.setLeagues);
+    };
+
+    @action
+    setLeagues = (leagues: Leagues) => {
+        this.leagues = leagues;
+    };
 
     @action
     toogleUpdateFlag = () => {

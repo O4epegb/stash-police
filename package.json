@@ -1,6 +1,7 @@
 {
     "name": "stash-police",
-    "version": "1.0.6",
+    "productName": "Stash Police",
+    "version": "1.0.10",
     "description": "Stash Police - Path Of Exile stash assistant app",
     "main": "build/backend.js",
     "author": {
@@ -18,16 +19,16 @@
         "build:dev": "webpack",
         "lint": "tslint --fix \"./src/**/*.ts{,x}\"",
         "prettier": "prettier --parser typescript --single-quote --tab-width 4 --write \"./src/**/*.ts{,x}\"",
-        "release1": "env-cmd ./.forever-ignore/.env electron-builder --publish=always",
-        "release": "npm run build && env-cmd ./.forever-ignore/.env electron-builder"
+        "release": "rimraf build dist && npm run build && env-cmd .env electron-builder"
     },
     "build": {
         "appId": "com.electron.stach-police",
         "productName": "Stash Police",
         "files": [
-            "build/**/*",
-            "node_modules/**/*",
-            "package.json"
+            "build/**/*"
+        ],
+        "extraResources": [
+            "CHANGELOG.md"
         ],
         "icon": "./src/frontend/assets/police-icon.png",
         "publish": {
@@ -54,9 +55,11 @@
         "cheerio": "^1.0.0-rc.2",
         "classnames": "^2.2.6",
         "date-fns": "^1.29.0",
+        "electron-unhandled": "^1.1.0",
         "electron-updater": "^2.21.10",
         "fs-extra": "^6.0.1",
         "lodash": "^4.17.10",
+        "marked": "^0.4.0",
         "mobx": "^5.0.3",
         "mobx-react": "^5.2.3",
         "react": "^16.4.1",
@@ -65,13 +68,16 @@
         "react-router-dom": "^4.3.1",
         "react-table": "^6.8.6",
         "tslib": "^1.9.3",
-        "uuid": "^3.2.1"
+        "uuid": "^3.2.1",
+        "winston": "^3.0.0",
+        "winston-daily-rotate-file": "^3.2.3"
     },
     "devDependencies": {
         "@types/cheerio": "^0.22.7",
         "@types/classnames": "^2.2.4",
         "@types/fs-extra": "^5.0.3",
         "@types/lodash": "4.14.110",
+        "@types/marked": "^0.4.0",
         "@types/node": "^10.3.5",
         "@types/react": "^16.4.1",
         "@types/react-dom": "^16.0.6",
@@ -84,7 +90,7 @@
         "electron": "^2.0.3",
         "electron-builder": "^20.15.1",
         "electron-connect": "^0.6.3",
-        "electron-reload-webpack-plugin": "^2.0.1",
+        "electron-reload-webpack-plugin": "^2.0.4",
         "env-cmd": "^8.0.2",
         "file-loader": "^1.1.11",
         "fork-ts-checker-webpack-plugin": "^0.4.2",
@@ -96,12 +102,13 @@
         "postcss-loader": "^2.1.5",
         "precss": "^3.1.2",
         "prettier": "^1.13.5",
+        "rimraf": "^2.6.2",
         "style-loader": "^0.21.0",
         "ts-loader": "^4.4.1",
         "tslint": "^5.10.0",
         "typescript": "^2.9.2",
         "url-loader": "^1.0.1",
-        "webpack": "^4.12.0",
+        "webpack": "^4.12.1",
         "webpack-cli": "^3.0.8"
     }
 }

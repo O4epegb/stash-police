@@ -473,6 +473,60 @@ button {
     }
 }
 
+.main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex: 1;
+
+    &__content {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    &__changelog {
+        &-title {
+            margin-bottom: 10px;
+        }
+
+        &-content {
+            h1 {
+                font-size: 18px;
+            }
+
+            h2, h3, h4, h5, h6 {
+                font-size: 16px;
+            }
+
+            ul {
+                margin: 10px 0;
+            }
+        }
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 10px;
+
+        &-version {
+            font-size: 12px;
+            margin-left: 6px;
+        }
+
+        &-github {
+            fill: #fff;
+            cursor: pointer;
+
+            svg {
+                display: block;
+            }
+        }
+    }
+}
+
 .create-report {
     position: relative;
     height: 100%;

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import * as classnames from 'classnames';
 
 import * as m from '../models';
-import { getLeagues, createCheckout } from '../services';
+import { createCheckout } from '../services';
 import { getTotalItemsValue } from '../utils';
 import { Routes } from '../constants';
 import { Store } from '../Store';
@@ -18,7 +18,6 @@ type Props = RouteComponentProps<{ id: string }> & {};
 
 interface State {
     selectedCheckoutId: string;
-    isActiveLeague: boolean;
 }
 
 @observer
@@ -30,19 +29,15 @@ export class ReportPage extends React.Component<Props, State> {
 
         Store.setActiveReport(props.match.params.id);
 
-        console.log('active report', Store.activeReport);
-
         const report = Store.activeReport;
         const checkouts = report && report.checkouts;
 
         this.state = {
-            selectedCheckoutId: checkouts && _.last(checkouts).id,
-            isActiveLeague: false
+            selectedCheckoutId: checkouts && _.last(checkouts).id
         };
     }
 
     componentDidMount() {
-        this.checkIfLeagueIsActive();
         this.scrollCheckoutListNode();
     }
 
@@ -55,32 +50,18 @@ export class ReportPage extends React.Component<Props, State> {
 
             this.setState(
                 {
-                    selectedCheckoutId: checkouts && _.last(checkouts).id,
-                    isActiveLeague: false
+                    selectedCheckoutId: checkouts && _.last(checkouts).id
                 },
                 () => {
                     this.scrollCheckoutListNode();
                 }
             );
-            this.checkIfLeagueIsActive();
         }
     }
 
     componentWillUnmount() {
         Store.setActiveReport(null);
     }
-
-    checkIfLeagueIsActive = () => {
-        return getLeagues().then(leagues => {
-            const isActiveLeague = leagues.find(
-                league => league.id === Store.activeReport.league.id
-            );
-
-            this.setState({
-                isActiveLeague: Boolean(isActiveLeague)
-            });
-        });
-    };
 
     selectCheckout = (id: string) => {
         this.setState({
@@ -103,18 +84,33 @@ export class ReportPage extends React.Component<Props, State> {
         const { activeReport } = Store;
         Store.setLayoutLoaderText(`Updating Report`);
 
-        createCheckout({
-            accountName: Store.accountName,
-            league: activeReport.league,
-            tabs: activeReport.lastProccessedTabs,
-            updater: ({ totalTabsNumber, tab, processedTabsNumber }) => {
-                Store.setLayoutLoaderText(
-                    `Fetched tab "${
-                        tab.n
-                    }" (${processedTabsNumber}/${totalTabsNumber})`
+        Store.updateLeagues()
+            .then(() => {
+                const isActiveLeague = Store.leagues.find(
+                    league => league.id === Store.activeReport.league.id
                 );
-            }
-        })
+
+                if (!isActiveLeague) {
+                    throw new Error('League is not active');
+                } else {
+                    return createCheckout({
+                        accountName: Store.accountName,
+                        league: activeReport.league,
+                        tabs: activeReport.lastProccessedTabs,
+                        updater: ({
+                            totalTabsNumber,
+                            tab,
+                            processedTabsNumber
+                        }) => {
+                            Store.setLayoutLoaderText(
+                                `Fetched tab "${
+                                    tab.n
+                                }" (${processedTabsNumber}/${totalTabsNumber})`
+                            );
+                        }
+                    });
+                }
+            })
             .then(checkout => {
                 console.log('created new checkout', checkout);
                 const newReport: m.Report = {
@@ -170,7 +166,7 @@ export class ReportPage extends React.Component<Props, State> {
     };
 
     render() {
-        const { selectedCheckoutId, isActiveLeague } = this.state;
+        const { selectedCheckoutId } = this.state;
         const { match } = this.props;
 
         const report = Store.activeReport;
@@ -179,6 +175,9 @@ export class ReportPage extends React.Component<Props, State> {
             return <div>Report with id {match.params.id} is not found</div>;
         }
 
+        const isActiveLeague = Store.leagues.find(
+            league => league.id === Store.activeReport.league.id
+        );
         const selectedCheckout = report.checkouts.find(
             checkout => checkout.id === selectedCheckoutId
         );

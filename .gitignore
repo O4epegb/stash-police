@@ -1,5 +1,6 @@
 .vscode
 .forever-ignore
+.env
 node_modules
 build
 dist

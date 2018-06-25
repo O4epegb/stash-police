@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const useElectronConnect = process.env.ELECTRON_CONNECT === 'true';
 
 const ElectronReloadWebpackPlugin = createElectronReloadWebpackPlugin({
-    path: path.join(__dirname, './build/backend.js'),
+    path: './',
     logLevel: 0
 });
 
@@ -25,8 +25,10 @@ const frontendConfig = {
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.styl']
     },
     plugins: [
-        !isProduction &&
-            new CopyWebpackPlugin([{ from: './dev-app-update.yml', to: './' }]),
+        new CopyWebpackPlugin([
+            { from: './dev-app-update.yml', to: './' },
+            { from: './CHANGELOG.md', to: './resources' }
+        ]),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'src/index.html',

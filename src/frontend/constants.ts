@@ -1,6 +1,3 @@
-import * as path from 'path';
-import { remote } from 'electron';
-
 export const isProduction = process.env.NODE_ENV === 'production';
 export const isDevelopment = !isProduction;
 
@@ -28,15 +25,6 @@ export enum Colors {
     textDark = '#3b2c1b',
     textBright = '#ffc077'
 }
-
-export enum FileNames {
-    Settings = 'stash-police-settings.json',
-    Reports = 'stash-police-reports.json'
-}
-
-export const userDataPath = remote.app.getPath('userData');
-export const settingsPath = path.join(userDataPath, FileNames.Settings);
-export const reportsPath = path.join(userDataPath, FileNames.Reports);
 
 export enum ItemNames {
     ChaosOrb = 'Chaos Orb'

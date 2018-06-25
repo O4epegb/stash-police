@@ -2,7 +2,7 @@ import * as React from 'react';
 import { shell } from 'electron';
 import { observer } from 'mobx-react';
 
-import { settingsPath } from '../constants';
+import { settingsPath, logsPath } from '../../common';
 
 interface State {
     isOpened: boolean;
@@ -18,8 +18,8 @@ export class DevMenu extends React.Component<{}, State> {
         };
     }
 
-    openConfigFolder = () => {
-        shell.showItemInFolder(settingsPath);
+    openFolder = (somePath: string) => {
+        shell.showItemInFolder(somePath);
     };
 
     toggleMenu = () => {
@@ -33,8 +33,11 @@ export class DevMenu extends React.Component<{}, State> {
             <div className="dev-menu" onClick={this.toggleMenu}>
                 {isOpened ? (
                     <div>
-                        <div onClick={this.openConfigFolder}>
+                        <div onClick={() => this.openFolder(settingsPath)}>
                             Open config folder
+                        </div>
+                        <div onClick={() => this.openFolder(logsPath)}>
+                            Open logs folder
                         </div>
                     </div>
                 ) : (
