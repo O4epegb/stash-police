@@ -1,10 +1,14 @@
-import { Sparkline, ExplicitModifiersItem } from './common';
+import {
+    Sparkline,
+    ExplicitModifiersItem,
+    NinjaOverviewItemTypes
+} from './common';
 
-export interface JewelOverview {
-    lines: JewelItem[];
+export interface UniqueJewelOverviewApi {
+    lines: UniqueJewelItemApi[];
 }
 
-export interface JewelItem {
+export interface UniqueJewelItemApi {
     id: number;
     name: string;
     icon: string;
@@ -28,4 +32,8 @@ export interface JewelItem {
     chaosValue: number;
     exaltedValue: number;
     count: number;
+}
+
+export interface UniqueJewelItem extends UniqueJewelItemApi {
+    type: NinjaOverviewItemTypes.UniqueJewel;
 }

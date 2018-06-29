@@ -119,6 +119,37 @@ export function getDivinationCardOverview(params: GetOverviewParams) {
     return getGenericItemOverview<
         m.DivinationCardItemApi,
         m.DivinationCardItem,
-        m.DivinationCardOverview
+        m.DivinationCardOverviewApi
     >(m.NinjaOverviewItemTypes.DivinationCard, params);
+}
+
+export function getMapOverview(params: GetOverviewParams) {
+    return getGenericItemOverview<m.MapItemApi, m.MapItem, m.MapOverviewApi>(
+        m.NinjaOverviewItemTypes.Map,
+        params
+    );
+}
+
+export function getUniqueMapOverview(params: GetOverviewParams) {
+    return getGenericItemOverview<
+        m.MapItemApi,
+        m.UniqueMapItem,
+        m.UniqueMapOverviewApi
+    >(m.NinjaOverviewItemTypes.UniqueMap, params);
+}
+
+export function getUniqueJewelOverview(params: GetOverviewParams) {
+    return getGenericItemOverview<
+        m.UniqueJewelItemApi,
+        m.UniqueJewelItem,
+        m.UniqueJewelOverviewApi
+    >(m.NinjaOverviewItemTypes.UniqueJewel, params);
+}
+
+export function getUniqueFlaskOverview(params: GetOverviewParams) {
+    return getGenericItemOverview<
+        m.UniqueFlaskItemApi,
+        m.UniqueFlaskItem,
+        m.UniqueFlaskOverviewApi
+    >(m.NinjaOverviewItemTypes.UniqueFlask, params);
 }

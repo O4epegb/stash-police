@@ -317,9 +317,10 @@ export class ReportPage extends React.Component<Props, State> {
                         </div>
                         {itemsLength > 0 && (
                             <ReactTable
-                                style={{
-                                    flex: '1'
-                                }}
+                                // works fine without it, it seems, need to look at it a bit more
+                                // style={{
+                                //     flex: '1'
+                                // }}
                                 className="report-items__table -striped -highlight"
                                 showPagination={false}
                                 defaultPageSize={itemsLength}
@@ -338,6 +339,7 @@ export class ReportPage extends React.Component<Props, State> {
                                     {
                                         Header: 'Item',
                                         accessor: 'name',
+                                        className: 'report__item-cell',
                                         Cell: ({ original: item }) => (
                                             <div className="report__item-cell">
                                                 <img

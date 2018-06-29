@@ -1,13 +1,15 @@
 import {
     Sparkline,
     ExplicitModifiersItem,
-    ImplicitModifiersItem
+    ImplicitModifiersItem,
+    NinjaOverviewItemTypes
 } from './common';
 
-export interface FlaskOverview {
-    lines: FlaskItem[];
+export interface UniqueFlaskOverviewApi {
+    lines: UniqueFlaskItemApi[];
 }
-export interface FlaskItem {
+
+export interface UniqueFlaskItemApi {
     id: number;
     name: string;
     icon: string;
@@ -31,4 +33,8 @@ export interface FlaskItem {
     chaosValue: number;
     exaltedValue: number;
     count: number;
+}
+
+export interface UniqueFlaskItem extends UniqueFlaskItemApi {
+    type: NinjaOverviewItemTypes.UniqueFlask;
 }

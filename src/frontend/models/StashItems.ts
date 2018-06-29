@@ -32,7 +32,7 @@ export interface StashItem {
     explicitMods?: string[];
     descrText?: string;
     frameType: number;
-    stackSize: number;
+    stackSize?: number;
     maxStackSize: number;
     category: Category;
     x: number;

@@ -25,6 +25,42 @@ const LeagueItem = posed.div({
     }
 });
 
+const selectors = [
+    {
+        type: m.TabType.CurrencyStash,
+        text: 'Currency'
+    },
+    {
+        type: m.TabType.EssenceStash,
+        text: 'Essence'
+    },
+    {
+        type: m.TabType.DivinationCardStash,
+        text: 'Divination'
+    },
+    {
+        type: m.TabType.FragmentStash,
+        text: 'Fragment'
+    },
+    // Poe api not sending items for map tabs yet
+    // {
+    //     type: m.TabType.MapStash,
+    //     text: 'Map'
+    // },
+    {
+        type: m.TabType.QuadStash,
+        text: 'Quad'
+    },
+    {
+        type: m.TabType.PremiumStash,
+        text: 'Premium'
+    },
+    {
+        type: m.TabType.NormalStash,
+        text: 'Normal'
+    }
+];
+
 interface Props {
     onReportCreate: (report: m.Report) => any;
 }
@@ -141,12 +177,12 @@ export class CreateReportPage extends React.Component<Props, State> {
         });
     };
 
-    selectTabsByType = (type: m.TabType) => {
+    selectTabsByType = (type: m.TabType, selectedStatus = true) => {
         this.setState({
             tabs: this.state.tabs.map(t => {
                 return {
                     ...t,
-                    isSelected: t.isSelected || t.type === type
+                    isSelected: t.type === type ? selectedStatus : t.isSelected
                 };
             })
         });
@@ -247,6 +283,11 @@ export class CreateReportPage extends React.Component<Props, State> {
                             <button
                                 disabled={showWarning}
                                 className="create-report__create-button"
+                                title={
+                                    showWarning
+                                        ? 'You need to select at least one tab'
+                                        : ''
+                                }
                                 onClick={this.createReport}
                             >
                                 Create Report
@@ -257,65 +298,68 @@ export class CreateReportPage extends React.Component<Props, State> {
                                 )}
                             </button>
                             <div className="create-report__button-list">
-                                <button
-                                    className="create-report__button"
-                                    onClick={() =>
-                                        this.selectAllTabsToBoolean(true)
-                                    }
-                                >
-                                    Select all
-                                </button>
-                                <button
-                                    className="create-report__button"
-                                    onClick={() =>
-                                        this.selectAllTabsToBoolean(false)
-                                    }
-                                >
-                                    Deselect all
-                                </button>
-                                <button
-                                    className="create-report__button"
-                                    onClick={() =>
-                                        this.selectTabsByType(
-                                            m.TabType.CurrencyStash
-                                        )
-                                    }
-                                >
-                                    Select Currency tabs
-                                </button>
-                                <button
-                                    className="create-report__button"
-                                    onClick={() =>
-                                        this.selectTabsByType(
-                                            m.TabType.EssenceStash
-                                        )
-                                    }
-                                >
-                                    Select Essence tabs
-                                </button>
-                                <button
-                                    className="create-report__button"
-                                    onClick={() =>
-                                        this.selectTabsByType(
-                                            m.TabType.DivinationCardStash
-                                        )
-                                    }
-                                >
-                                    Select Divination tabs
-                                </button>
-                                <button
-                                    className="create-report__button"
-                                    onClick={() =>
-                                        this.selectTabsByType(
-                                            m.TabType.FragmentStash
-                                        )
-                                    }
-                                >
-                                    Select Fragment tabs
-                                </button>
+                                <div className="create-report__selector">
+                                    <div className="create-report__selector-buttons">
+                                        <button
+                                            className="create-report__selector-button"
+                                            onClick={() =>
+                                                this.selectAllTabsToBoolean(
+                                                    true
+                                                )
+                                            }
+                                        >
+                                            Select
+                                        </button>
+                                        <button
+                                            className="create-report__selector-button"
+                                            onClick={() =>
+                                                this.selectAllTabsToBoolean(
+                                                    false
+                                                )
+                                            }
+                                        >
+                                            Deselect
+                                        </button>
+                                    </div>
+                                    <div className="create-report__selector-name">
+                                        All tabs
+                                    </div>
+                                </div>
+                                {selectors.map(selector => (
+                                    <div
+                                        className="create-report__selector"
+                                        key={selector.type}
+                                    >
+                                        <div className="create-report__selector-buttons">
+                                            <button
+                                                className="create-report__selector-button"
+                                                onClick={() =>
+                                                    this.selectTabsByType(
+                                                        selector.type
+                                                    )
+                                                }
+                                            >
+                                                Select
+                                            </button>
+                                            <button
+                                                className="create-report__selector-button"
+                                                onClick={() =>
+                                                    this.selectTabsByType(
+                                                        selector.type,
+                                                        false
+                                                    )
+                                                }
+                                            >
+                                                Deselect
+                                            </button>
+                                        </div>
+                                        <div className="create-report__selector-name">
+                                            {selector.text} tabs
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-
                         <div className="create-report__tabs">
                             <div className="create-report__tabs-title">
                                 <div>

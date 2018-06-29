@@ -41,18 +41,5 @@ export enum ApiUrls {
     myAccount = 'https://pathofexile.com/my-account',
     getStashItems = 'https://pathofexile.com/character-window/get-stash-items',
     ninjaCurrencyOverview = 'http://poe.ninja/api/data/currencyoverview',
-    ninjaItemOverview = 'http://poe.ninja/api/data/itemoverview',
-    ninjaGetCurrencyOverview = 'http://poe.ninja/api/Data/GetCurrencyOverview',
-    ninjaGetFragmentOverview = 'http://poe.ninja/api/Data/GetFragmentOverview',
-    ninjaGetEssenceOverview = 'http://poe.ninja/api/Data/GetEssenceOverview',
-    ninjaGetDivinationCardsOverview = 'http://poe.ninja/api/Data/GetDivinationCardsOverview'
-
-    // NINJA_UNIQUE_MAP_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueMapOverview',
-    // NINJA_MAP_OVERVIEW = 'http://poe.ninja/api/Data/GetMapOverview',
-
-    // NINJA_UNIQUE_JEWEL_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueJewelOverview',
-    // NINJA_UNIQUE_FLASK_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueFlaskOverview',
-    // NINJA_UNIQUE_WEAPON_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueWeaponOverview',
-    // NINJA_UNIQUE_ARMOUR_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueArmourOverview',
-    // NINJA_UNIQUE_ACCESSORY_OVERVIEW = 'http://poe.ninja/api/Data/GetUniqueAccessoryOverview'
+    ninjaItemOverview = 'http://poe.ninja/api/data/itemoverview'
 }

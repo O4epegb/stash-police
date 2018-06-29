@@ -198,20 +198,32 @@ export function createCheckout({
         ninjaApi.getCurrencyOverview(ninjaApiParams),
         ninjaApi.getEssenceOverview(ninjaApiParams),
         ninjaApi.getDivinationCardOverview(ninjaApiParams),
-        ninjaApi.getFragmentOverview(ninjaApiParams)
+        ninjaApi.getFragmentOverview(ninjaApiParams),
+        ninjaApi.getMapOverview(ninjaApiParams),
+        ninjaApi.getUniqueMapOverview(ninjaApiParams),
+        ninjaApi.getUniqueJewelOverview(ninjaApiParams),
+        ninjaApi.getUniqueFlaskOverview(ninjaApiParams)
     ]).then(
         ([
             tabsWithItems,
             currencyOverview,
             essenceOverview,
             divinationCardOverview,
-            fragmentOverview
+            fragmentOverview,
+            mapOverview,
+            uniqueMapOverview,
+            uniqueJewelOverview,
+            uniqueFlaskOverview
         ]) => {
             const itemsOverview = {
                 ...currencyOverview,
                 ...essenceOverview,
                 ...divinationCardOverview,
-                ...fragmentOverview
+                ...fragmentOverview,
+                ...mapOverview,
+                ...uniqueMapOverview,
+                ...uniqueJewelOverview,
+                ...uniqueFlaskOverview
             };
             const tabsUsed = tabsWithItems.map(t => t.tab);
 
@@ -227,7 +239,7 @@ export function createCheckout({
 
             const itemsByName = items.reduce(
                 (acc, item) => {
-                    const { typeLine: itemName, stackSize } = item;
+                    const { typeLine: itemName, stackSize = 1 } = item;
 
                     const itemObject = acc[itemName] || {
                         stackSize: 0,

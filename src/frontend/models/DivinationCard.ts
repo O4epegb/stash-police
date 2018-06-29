@@ -4,7 +4,7 @@ import {
     NinjaOverviewItemTypes
 } from './common';
 
-export interface DivinationCardOverview {
+export interface DivinationCardOverviewApi {
     lines: DivinationCardItemApi[];
 }
 

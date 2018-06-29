@@ -1,10 +1,18 @@
-import { Sparkline, ExplicitModifiersItem } from './common';
+import {
+    Sparkline,
+    ExplicitModifiersItem,
+    NinjaOverviewItemTypes
+} from './common';
 
-export interface MapOverview {
-    lines: MapItem[];
+export interface MapOverviewApi {
+    lines: MapItemApi[];
 }
 
-export interface MapItem {
+export interface UniqueMapOverviewApi {
+    lines: MapItemApi[];
+}
+
+export interface MapItemApi {
     id: number;
     name: string;
     icon: string;
@@ -12,12 +20,13 @@ export interface MapItem {
     levelRequired: number;
     baseType: string;
     stackSize: number;
-    variant: string | null;
+    variant: null | string;
     prophecyText: null;
     artFilename: null;
     links: number;
     itemClass: number;
     sparkline: Sparkline;
+    lowConfidenceSparkline: Sparkline;
     implicitModifiers: any[];
     explicitModifiers: ExplicitModifiersItem[];
     flavourText: string;
@@ -28,4 +37,12 @@ export interface MapItem {
     chaosValue: number;
     exaltedValue: number;
     count: number;
+}
+
+export interface MapItem extends MapItemApi {
+    type: NinjaOverviewItemTypes.Map;
+}
+
+export interface UniqueMapItem extends MapItemApi {
+    type: NinjaOverviewItemTypes.UniqueMap;
 }
