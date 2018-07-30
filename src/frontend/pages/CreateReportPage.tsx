@@ -299,6 +299,9 @@ export class CreateReportPage extends React.Component<Props, State> {
                             </button>
                             <div className="create-report__button-list">
                                 <div className="create-report__selector">
+                                    <div className="create-report__selector-name">
+                                        All tabs
+                                    </div>
                                     <div className="create-report__selector-buttons">
                                         <button
                                             className="create-report__selector-button"
@@ -321,15 +324,15 @@ export class CreateReportPage extends React.Component<Props, State> {
                                             Deselect
                                         </button>
                                     </div>
-                                    <div className="create-report__selector-name">
-                                        All tabs
-                                    </div>
                                 </div>
                                 {selectors.map(selector => (
                                     <div
                                         className="create-report__selector"
                                         key={selector.type}
                                     >
+                                        <div className="create-report__selector-name">
+                                            {selector.text} tabs
+                                        </div>
                                         <div className="create-report__selector-buttons">
                                             <button
                                                 className="create-report__selector-button"
@@ -352,9 +355,6 @@ export class CreateReportPage extends React.Component<Props, State> {
                                             >
                                                 Deselect
                                             </button>
-                                        </div>
-                                        <div className="create-report__selector-name">
-                                            {selector.text} tabs
                                         </div>
                                     </div>
                                 ))}
